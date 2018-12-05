@@ -55,14 +55,40 @@ local cover
 local X1 = 200
 local X2 = 750
 local Y1 = 200
-local Y2 = 750
+local Y2 = 650
 
 local userAnswer
 local textTouched = false
 
+local totalSeconds = 20
+local secondsLeft = 20
+local clockText
+local countDownTimer
+
+local circle
+local heart1
+local heart2
+local heart3
+local lives = 3
+
+-----------------------------------------------------------------------------------------
+--SOUNDS
+-----------------------------------------------------------------------------------------
+
+--correct sound
+local correctSound = audio.loadSound( "Sounds/correctSound.mp3" )
+local correctSoundChannel
+
+--incorrect sound
+local incorrectSound = audio.loadSound( "Sounds/wrongSound.mp3" )
+local incorrectSoundChannel
+
 -----------------------------------------------------------------------------------------
 --LOCAL FUNCTIONS
 -----------------------------------------------------------------------------------------
+local function ResumeGame()
+    composer.gotoScene( "level1_screen" )
+end
 
 --making transition to next scene
 local function BackToLevel1() 
@@ -71,12 +97,65 @@ local function BackToLevel1()
     ResumeGame()
 end 
 
+--create the game over image 
+local function GameOver()
+    if (lives == 0) then
+        heart3.isVisible = false
+        heart2.isVisible = false
+        heart1.isVisible = false
+        gameOver = display.newImageRect("Images/gameOver.png", 2048, 1536)
+        gameOverSoundChannel = audio.play(gameOverSound)
+    end
+end
+
+--update the visibility of the hearts
+local function UpdateHearts()
+
+    if (lives == 2 ) then 
+        heart3.isVisible = false
+    elseif (lives == 1) then
+        heart2.isVisible = false
+    elseif (lives == 0) then
+    GameOver()
+    end
+end
+
+--this function counts down the time
+local function UpdateTime()
+
+    --decrement the number of seconds
+    secondsLeft = secondsLeft - 1
+
+    --display the number of seconds left in the clock object
+    clockText.text = "Time: \n"  ..    secondsLeft
+
+    if (secondsLeft == 0 ) then
+        --reset the number of seconds left
+        secondsLeft = totalSeconds
+        -- decrease life
+        lives = lives - 1 
+        -- update the hearts
+        UpdateHearts()
+        -- call game over or ask another question
+        GameOver()
+    end       
+end
+
+--function that calls the timer
+local function StartTimer()
+    --create a countdown timer that loops infintely
+    countDownTimer = timer.performWithDelay( 1000, UpdateTime, 0)
+end
+
+
+
 -----------------------------------------------------------------------------------------
 --checking to see if the user pressed the right answer and bring them back to level 1
 local function TouchListenerAnswer(touch)
     userAnswer = answerText.text
     
     if (touch.phase == "ended") then
+        correctSoundChannel = audio.play(correctSound)
 
         BackToLevel1( )
     
@@ -88,10 +167,14 @@ local function TouchListenerWrongAnswer(touch)
     userAnswer = wrongText1.text
     
     if (touch.phase == "ended") then
+        incorrectSoundChannel = audio.play(incorrectSound)
         
         BackToLevel1( )
-        
-        
+
+        --decrease the lives/ update the number of hearts
+        UpdateHearts() 
+        lives = lives - 1
+        heart3.isVisible = false
     end 
 end
 
@@ -100,9 +183,13 @@ local function TouchListenerWrongAnswer2(touch)
     userAnswer = wrongText2.text
     
     if (touch.phase == "ended") then
+        incorrectSoundChannel = audio.play(incorrectSound)
 
         BackToLevel1( )
-        
+
+        --decrease the lives/ update the number of hearts
+        UpdateHearts() 
+        lives = lives - 1 
     end 
 end
 
@@ -111,9 +198,13 @@ local function TouchListenerWrongAnswer3(touch)
     userAnswer = wrongText3.text
     
     if (touch.phase == "ended") then
+        incorrectSoundChannel = audio.play(incorrectSound)
 
-        BackToLevel1( )
-        
+        BackToLevel1( ) 
+
+        --decrease the lives/ update the number of hearts
+        UpdateHearts()    
+        lives = lives - 1
     end 
 end
 
@@ -158,6 +249,11 @@ local function DisplayQuestion()
     wrongText1.text = wrongAnswer1
     wrongText2.text = wrongAnswer2
     wrongText3.text = wrongAnswer3
+
+    --start the timer
+    StartTimer()
+
+    UpdateHearts()
 end
 
 local function PositionAnswers()
@@ -259,6 +355,34 @@ function scene:create( event )
     wrongText3 = display.newText("", X2, Y1, Arial, 75)
     wrongText3.anchorX = 0
 
+    --create the timer
+    clockText = display.newText ("Time: \n"  ..  secondsLeft, 500, 450, nil, 50)
+    clockText:setTextColor(168/255, 13/255, 13/255)
+
+    --insert the circle
+    circle = display.newImageRect("Images/circle.png", 100, 100)
+    circle.x = 350
+    circle.y = display.contentHeight * 2.08
+    circle.isVisible = false
+
+    -- Insert the Hearts
+    heart1 = display.newImageRect("Images/heart.png", 80, 80)
+    heart1.x = 50
+    heart1.y = 50
+    heart1.isVisible = true
+
+    -- Insert the Hearts
+    heart2 = display.newImageRect("Images/heart.png", 80, 80)
+    heart2.x = 130
+    heart2.y = 50
+    heart2.isVisible = true
+
+    -- Insert the Hearts
+    heart3 = display.newImageRect("Images/heart.png", 80, 80)
+    heart3.x = 210
+    heart3.y = 50
+    heart3.isVisible = true
+    
     -----------------------------------------------------------------------------------------
 
     -- insert all objects for this scene into the scene group
@@ -269,7 +393,7 @@ function scene:create( event )
     sceneGroup:insert(wrongText1)
     sceneGroup:insert(wrongText2)
     sceneGroup:insert(wrongText3)
-
+    sceneGroup:insert( clockText )
 
 end --function scene:create( event )
 

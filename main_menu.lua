@@ -157,8 +157,8 @@ function scene:create( event )
 
     -----------------------------------------------------------------------------------------
 
-       --Creating Instruction Button
-    muteButton = widget.newButton( 
+       --Creating Mute Button
+    --[[--muteButton = widget.newButton( 
        {-- Set its position on the screen relative to the screen size
           x = 900,
           y = 100,
@@ -171,7 +171,7 @@ function scene:create( event )
             overFile = "Images/mute.png",
 
             -- When the button is released, stop the audio
-           onRelease = audio.stop}) 
+           onRelease = audio.stop}) --]]
 
     -----------------------------------------------------------------------------------------
 
