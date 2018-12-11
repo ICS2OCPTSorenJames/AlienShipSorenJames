@@ -40,7 +40,7 @@ local background
 local questionCircle
 local questionCircle2
 local backButton
-local questionsAnswered
+local questionsAnswered = 0
 local circle
 local circle2
 
@@ -108,6 +108,12 @@ local function stop (event)
     end
 end
 
+local function MakeCirclesVisible()
+    questionCircle.isVisible = true
+    questionCircle2.isVisible = true
+end
+
+
 --create the game over image 
 local function GameOver()
     if (lives == 0) then
@@ -120,7 +126,7 @@ local function GameOver()
 end
 
 --update the visibility of the hearts
-local function UpdateHearts()
+function UpdateHeartsL1()
 
     if (lives == 2 ) then 
         heart3.isVisible = false
@@ -154,30 +160,6 @@ local function RemoveRuntimeListeners()
     Runtime:removeEventListener("touch", stop )
 end
 
-local function ReplaceCharacter()
-    character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
-    character.x = display.contentWidth * 0.5 / 8
-    character.y = display.contentHeight  * 0.1 / 3
-    character.width = 75
-    character.height = 100
-    character.myName = "KickyKat"
-
-    -- intialize horizontal movement of character
-    motionx = 0
-
-    -- add physics body
-    physics.addBody( character, "dynamic", { density=0, friction=0.5, bounce=0, rotation=0 } )
-
-    -- prevent character from being able to tip over
-    character.isFixedRotation = true
-
-    -- add back arrow listeners
-    AddArrowEventListeners()
-
-    -- add back runtime listeners
-    AddRuntimeListeners()
-end
-
 
 local function onCollision( self, event )
     -- for testing purposes
@@ -189,8 +171,7 @@ local function onCollision( self, event )
 
     if ( event.phase == "began" ) then
 
-        if  (event.target.myName == "questionCircle") or 
-            (event.target.myName == "questionCircle2") then
+        if  (event.target.myName == "questionCircle") then
 
             -- get the ball that the user hit
             circle = event.target  
@@ -200,7 +181,7 @@ local function onCollision( self, event )
             RemoveRuntimeListeners()
 
             -- remove the character from the display
-            display.remove(character)
+            --display.remove(character)
 
             -- stop the character from moving
             motionx = 0
@@ -213,12 +194,34 @@ local function onCollision( self, event )
 
             -- Increment questions answered
             questionsAnswered = questionsAnswered + 1
-        end      
+
+            elseif (event.target.myName == "questionCircle2") then
+
+                -- remove runtime listeners that move the character
+                RemoveArrowEventListeners()
+                RemoveRuntimeListeners()
+
+                -- remove the character from the display
+                --display.remove(character)
+
+                -- stop the character from moving
+                motionx = 0
+
+                -- make the character invisible
+                character.isVisible = false
+
+                -- show overlay with math question
+                composer.showOverlay( "level1_question2", { isModal = true, effect = "fade", time = 100})
+                
+                -- Increment questions answered
+                questionsAnswered = questionsAnswered + 1
+        end
     end
 end
 
 
-local function ReplaceCharacter()
+
+function ReplaceCharacterL1()
     character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
     character.x = 100
     character.y = 650
@@ -242,6 +245,90 @@ local function ReplaceCharacter()
     AddRuntimeListeners()
 end
 
+function ReplaceCharacterL1Q1()
+    character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
+    character.x = 450
+    character.y = 650
+    character.width = 75
+    character.height = 100
+    character.myName = "KickyKat"
+
+    -- intialize horizontal movement of character
+    motionx = 0
+
+    -- add physics body
+    physics.addBody( character, "dynamic", { density=0, friction=0.5, bounce=0, rotation=0 } )
+
+    -- prevent character from being able to tip over
+    character.isFixedRotation = true
+
+    -- add back arrow listeners
+    AddArrowEventListeners()
+
+    -- add back runtime listeners
+    AddRuntimeListeners()
+end
+
+function ReplaceCharacterL1Q2()
+    character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
+    character.x = 660
+    character.y = 650
+    character.width = 75
+    character.height = 100
+    character.myName = "KickyKat"
+
+    -- intialize horizontal movement of character
+    motionx = 0
+
+    -- add physics body
+    physics.addBody( character, "dynamic", { density=0, friction=0.5, bounce=0, rotation=0 } )
+
+    -- prevent character from being able to tip over
+    character.isFixedRotation = true
+
+    -- add back arrow listeners
+    AddArrowEventListeners()
+
+    -- add back runtime listeners
+    AddRuntimeListeners()
+end
+
+
+
+
+local function AddPhysicsBodies()
+    --add to the physics engine
+    physics.addBody (questionCircle, "static", {density=0, friction=0, bounce=0} )
+    physics.addBody (questionCircle2, "static", {density=0, friction=0, bounce=0} )
+    physics.addBody(floor, "static", {density=1, friction=0.3, bounce=0.2} )
+end
+
+local function RemovePhysicsBodies()
+    physics.removeBody(floor)
+end
+
+--add collision to the first circle
+function AddCollisionListenersL1C1()
+	--if they hit the circle on collision will be called
+	questionCircle.collision = onCollision
+    questionCircle:addEventListener( "collision" )
+end
+
+--add collision to the second circle
+function AddCollisionListenersL1C2()
+    questionCircle2.collision = onCollision
+    questionCircle2:addEventListener( "collision" )
+end
+
+--remove collision to the first circle
+function RemoveCollisionListenersL1C1()
+	questionCircle:removeEventListener( "collision" )
+end
+
+--remove collision to the second circle
+function RemoveCollisionListenersL1C2()
+    questionCircle2:removeEventListener( "collision" )
+end
 
 -- Creating Transitioning Function back to main menu
 local function BackTransition( )
@@ -253,41 +340,18 @@ local function ResumeGame()
 
     -- make character visible again
     character.isVisible = true
+    character.x = 450
+    character.y = 650
     
     if (questionsAnswered > 0) then
         if (circle ~= nil) and (circle.isBodyActive == true) then
             physics.removeBody(circle)
-            circle.isVisible = false
+            circle.isVisible = false  
         end
     end
 end
 
 
-local function AddCollisionListeners()
-	--if they hit the circle on collision will be called
-	questionCircle.collision = onCollision
-    questionCircle:addEventListener( "collision" )
-    questionCircle2.collision = onCollision
-    questionCircle2:addEventListener( "collision" )
-end
-
-local function RemoveCollisionListeners()
-	questionCircle:removeEventListener( "collision" )
-    questionCircle2:removeEventListener( "collision" )
-end
-
-local function AddPhysicsBodies()
-	--add to the physics engine
-	physics.addBody (questionCircle, "static", {density=0, friction=0, bounce=0} )
-	physics.addBody (questionCircle2, "static", {density=0, friction=0, bounce=0} )
-	physics.addBody(floor, "static", {density=1, friction=0.3, bounce=0.2} )
-end
-
-local function RemovePhysicsBodies()
-	physics.removeBody(questionCircle)
-	physics.removeBody(questionCircle2)
-	physics.removeBody(floor)
-end
 
 -----------------------------------------------------------------------------------------
 -- GLOBAL SCENE FUNCTIONS
@@ -327,13 +391,13 @@ function scene:create( event )
     sceneGroup:insert( background )
 
     -- Insert the Hearts
-    heart1 = display.newImageRect("Images/heart.png", 80, 80)
+   --[[] heart1 = display.newImageRect("Images/heart.png", 80, 80)
     heart1.x = 50
     heart1.y = 50
     heart1.isVisible = true
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
-    sceneGroup:insert( heart1 )
+    --sceneGroup:insert( heart1 )
 
     -- Insert the Hearts
     heart2 = display.newImageRect("Images/heart.png", 80, 80)
@@ -342,7 +406,7 @@ function scene:create( event )
     heart2.isVisible = true
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
-    sceneGroup:insert( heart2 )
+    --sceneGroup:insert( heart2 )
 
     -- Insert the Hearts
     heart3 = display.newImageRect("Images/heart.png", 80, 80)
@@ -351,27 +415,27 @@ function scene:create( event )
     heart3.isVisible = true
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
-    sceneGroup:insert( heart3 )
+    ---sceneGroup:insert( heart3 )]]
 
     --Insert the right arrow
     rArrow = display.newImageRect("Images/RightArrowUnpressed.png", 100, 50)
-    rArrow.x = display.contentWidth * 9.2 / 10
-    rArrow.y = display.contentHeight * 9.5 / 10
+    rArrow.x = display.contentWidth * 9.7 / 10
+    rArrow.y = 680
    
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( rArrow)
 
     --Insert the right arrow
     lArrow = display.newImageRect("Images/LeftArrowUnpressed.png", 100, 50)
-    lArrow.x = display.contentWidth * 7.2 / 10
-    lArrow.y = display.contentHeight * 9.5 / 10
+    lArrow.x = display.contentWidth * 7.7 / 10
+    lArrow.y = 680
    
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( lArrow)
 
     --Insert the left arrow
     uArrow = display.newImageRect("Images/UpArrowUnpressed.png", 50, 100)
-    uArrow.x = display.contentWidth * 8.2 / 10
+    uArrow.x = display.contentWidth * 8.7 / 10
     uArrow.y = display.contentHeight * 8.5 / 10
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
@@ -382,49 +446,30 @@ function scene:create( event )
     floor.x = display.contentCenterX
     floor.y = 750
     physics.addBody(floor, "static", {friction=0.5, bounce=0.3})
+    floor:toBack()
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( floor )
 
     --create the circle
-    circle = display.newImageRect("Images/circle.png", 100, 100)
-    circle.x = 350
-    circle.y = 650
-    circle.isVisible = false
-
-    
-    --create the second circle
-    circle2 = display.newImageRect("Images/circle.png", 100, 100)
-    circle2.x = 650
-    circle2.y = 650
-    circle2.isVisible = false    
-
     questionCircle = display.newImageRect("Images/circle.png", 100, 100)
     questionCircle.x = 350
     questionCircle.y = 650
-    questionCircle.isVisible = true
     questionCircle.myName = "questionCircle"
-    --questionCircle:toBack()
+    questionCircle:toBack()
+    
 
     sceneGroup:insert( questionCircle )
 
+    --create the second circle
     questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
     questionCircle2.x = 650
     questionCircle2.y = 650
-    questionCircle2.isVisible = true
     questionCircle2.myName = "questionCircle2"
-    --questionCircle2:toBack()
-
-    sceneGroup:insert( questionCircle2 )
-
-    --create the character 
-    --[[character = display.newImageRect("Images/KickyKatRight.png", 200, 200)
-    character.x = 100
-    character.y = 650
-
-    sceneGroup:insert( character )]]
-
+    questionCircle2:toBack()
     
+
+    sceneGroup:insert( questionCircle2 )    
 end
 
 ----------------------------------------------------------------------------------------
@@ -444,19 +489,37 @@ function scene:show( event )
     if ( phase == "will" ) then
 
         -- Called when the scene is still off screen (but is about to come on screen).
-    -----------------------------------------------------------------------------------------
+    
+        -- start physics
+        physics.start()
+
+        -- set gravity
+        physics.setGravity( 0, GRAVITY )
 
     elseif ( phase == "did" ) then
-        ReplaceCharacter()
 
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
 
+        numLives = 3
+        questionsAnswered = 0
+
+        -- make all soccer balls visible
+        MakeCirclesVisible()
+
+        -- add physics bodies to each object
+        AddPhysicsBodies()
+
+        -- add collision listeners to objects
+        AddCollisionListenersL1C1()
+        AddCollisionListenersL1C2()
+
+        -- create the character, add physics bodies and runtime listeners
+        ReplaceCharacterL1()
     end
-
 end --function scene:show( event )
-
+    
 -----------------------------------------------------------------------------------------
 
 -- The function called when the scene is issued to leave the screen
@@ -477,6 +540,15 @@ function scene:hide( event )
 
     elseif ( phase == "did" ) then
         -- Called immediately after scene goes off screen.
+        -- Insert code here to make the scene come alive.
+        -- Example: start timers, begin animation, play audio, etc.
+        ReplaceCharacterL1()
+        RemovePhysicsBodies()
+        physics.stop()
+        RemoveArrowEventListeners()
+        RemoveRuntimeListeners()
+        display.remove(character) 
+        ResumeGame()
     end
 
 end --function scene:hide( event )
@@ -510,29 +582,3 @@ scene:addEventListener( "destroy", scene )
 -----------------------------------------------------------------------------------------
 
 return scene
-
-
---[[ decrease number of lives
- numLives = numLives - 1
-
-            if (numLives == 2 ) then
-                -- update hearts
-                heart1.isVisible = true
-                heart2.isVisible = true
-                heart3.isVisible = false
-                timer.performWithDelay(200, ReplaceCharacter) 
-
-            elseif (numLives == 1 ) then
-              -- update hearts
-                heart1.isVisible = true
-                heart2.isVisible = false
-                heart3.isVisible = false
-                timer.performWithDelay(200, ReplaceCharacter)    
-
-            elseif (numLives == 0) then
-                -- update hearts
-                heart1.isVisible = false
-                heart2.isVisible = false
-                heart3.isVisible = false
-                timer.performWithDelay(200, YouLoseTransition)
-            end--]]

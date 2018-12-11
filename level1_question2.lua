@@ -2,7 +2,7 @@
 --
 -- level1_screen.lua
 -- Created by: Allison
--- Edited by: Soren Drew
+-- Date: May 16, 2017
 -- Description: This is the level 1 screen of the game. the charater can be dragged to move
 --If character goes off a certain araea they go back to the start. When a user interactes
 --with piant a trivia question will come up. they will have a limided time to click on the answer
@@ -87,11 +87,10 @@ local incorrectSoundChannel
 -----------------------------------------------------------------------------------------
 --LOCAL FUNCTIONS
 -----------------------------------------------------------------------------------------
-local function ResumeGame()
-    composer.hideOverlay("crossFade", 400 )
-    questionCircle.isVisible = false 
+local function ResumeGame2()
+    composer.hideOverlay("crossFade", 400)
     RemoveCollisionListenersL1C1()
-    ReplaceCharacterL1Q1()
+    ReplaceCharacterL1Q2()
 end
 
 
@@ -155,10 +154,14 @@ local function TouchListenerAnswer(touch)
     
     if (touch.phase == "ended") then
         correctSoundChannel = audio.play(correctSound)
+        --decrease the lives/ update the number of hearts
+        UpdateHeartsL1() 
+        lives = lives - 1 
         questionCircle.isVisible = false
-        RemoveCollisionListenersL1C1()
+        questionCircle2.isVisible = false
+        RemoveCollisionListenersL1C2()
 
-        ResumeGame()
+        ResumeGame2()  
     end 
 end
 
@@ -169,14 +172,12 @@ local function TouchListenerWrongAnswer(touch)
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
         --decrease the lives/ update the number of hearts
-        --UpdateHeartsL1() 
+        UpdateHeartsL1() 
         lives = lives - 1 
-        heart3.isVisible = false
-        questionCircle.isVisible = false
-        RemoveCollisionListenersL1C1()
-
+        questionCircle2.isVisible = false
+        RemoveCollisionListenersL1C2()
         
-        ResumeGame()
+        ResumeGame2()
     end 
 end
 
@@ -187,13 +188,12 @@ local function TouchListenerWrongAnswer2(touch)
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
         --decrease the lives/ update the number of hearts
-        --UpdateHeartsL1() 
+        UpdateHeartsL1() 
         lives = lives - 1 
-        heart3.isVisible = false
-        questionCircle.isVisible = false
-        RemoveCollisionListenersL1C1()
+        questionCircle2.isVisible = false
+        RemoveCollisionListenersL1C2()
 
-        ResumeGame()  
+        ResumeGame2()
     end 
 end
 
@@ -204,13 +204,12 @@ local function TouchListenerWrongAnswer3(touch)
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
         --decrease the lives/ update the number of hearts
-        --UpdateHeartsL1()    
-        lives = lives - 1
-        heart3.isVisible = false
-        questionCircle.isVisible = false
-        RemoveCollisionListenersL1C1()
+        UpdateHeartsL1() 
+        lives = lives - 1 
+        questionCircle2.isVisible = false
+        RemoveCollisionListenersL1C2()
 
-        ResumeGame() 
+        ResumeGame2()
     end 
 end
 
@@ -360,7 +359,7 @@ function scene:create( event )
 
     wrongText2 = display.newText("", X1, Y1, Arial, 75)
     wrongText2.anchorX = 0
-
+    
     wrongText3 = display.newText("", X2, Y1, Arial, 75)
     wrongText3.anchorX = 0
 
@@ -398,17 +397,16 @@ function scene:create( event )
     questionCircle.myName = "questionCircle"
     questionCircle:toBack()
     sceneGroup:insert( questionCircle )
-    
-    
 
+    
     questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
     questionCircle2.x = 650
     questionCircle2.y = 650
     questionCircle2.myName = "questionCircle2"
     questionCircle2:toBack()
     sceneGroup:insert( questionCircle2 )
-    
 
+    
     -----------------------------------------------------------------------------------------
 
     -- insert all objects for this scene into the scene group
@@ -420,6 +418,7 @@ function scene:create( event )
     sceneGroup:insert(wrongText2)
     sceneGroup:insert(wrongText3)
     sceneGroup:insert( clockText )
+    
 
 end --function scene:create( event )
 
@@ -446,9 +445,8 @@ function scene:show( event )
         DisplayQuestion()
         PositionAnswers()
         AddTextListeners()
-        AddCollisionListenersL1C1()
+        AddCollisionListenersL1C2()
     end
-
 end --function scene:show( event )
 
 -----------------------------------------------------------------------------------------
