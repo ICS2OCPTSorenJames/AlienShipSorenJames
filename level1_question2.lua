@@ -87,12 +87,6 @@ local incorrectSoundChannel
 -----------------------------------------------------------------------------------------
 --LOCAL FUNCTIONS
 -----------------------------------------------------------------------------------------
-local function ResumeGame2()
-    composer.hideOverlay("crossFade", 400)
-    RemoveCollisionListenersL1C1()
-    ReplaceCharacterL1Q2()
-end
-
 
 --create the game over image 
 local function GameOver()
@@ -128,6 +122,7 @@ local function UpdateTime()
     clockText.text = "Time: \n"  ..    secondsLeft
 
     if (secondsLeft == 0 ) then
+
         --reset the number of seconds left
         secondsLeft = totalSeconds
         -- decrease life
@@ -140,12 +135,26 @@ local function UpdateTime()
 end
 
 --function that calls the timer
-local function StartTimer()
+local function StartTimer(event)
     --create a countdown timer that loops infintely
     countDownTimer = timer.performWithDelay( 1000, UpdateTime, 0)
 end
 
+function YouWin()
+    if (character.x == 900) and 
+        (questionsAnswered == 2) then 
+        composer.gotoScene( "YouWin" )
+    end
+end
 
+local function ResumeGame2()
+    composer.hideOverlay("crossFade", 400)
+    RemoveCollisionListenersL1C1()
+    questionCircle.isVisible = false 
+    questionCircle2.isVisible = false 
+    ReplaceCharacterL1Q2()
+    AddArrowEventListeners()
+end
 
 -----------------------------------------------------------------------------------------
 --checking to see if the user pressed the right answer and bring them back to level 1
@@ -154,12 +163,10 @@ local function TouchListenerAnswer(touch)
     
     if (touch.phase == "ended") then
         correctSoundChannel = audio.play(correctSound)
-        --decrease the lives/ update the number of hearts
-        UpdateHeartsL1() 
-        lives = lives - 1 
-        questionCircle.isVisible = false
-        questionCircle2.isVisible = false
         RemoveCollisionListenersL1C2()
+        questionsAnswered = questionsAnswered + 1
+        UpdateHeartsL1()
+        UpdateTime()
 
         ResumeGame2()  
     end 
@@ -171,11 +178,10 @@ local function TouchListenerWrongAnswer(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        --decrease the lives/ update the number of hearts
-        UpdateHeartsL1() 
-        lives = lives - 1 
-        questionCircle2.isVisible = false
         RemoveCollisionListenersL1C2()
+        questionsAnswered = questionsAnswered + 1
+        UpdateHeartsL1()
+        UpdateTime()
         
         ResumeGame2()
     end 
@@ -187,11 +193,10 @@ local function TouchListenerWrongAnswer2(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        --decrease the lives/ update the number of hearts
-        UpdateHeartsL1() 
-        lives = lives - 1 
-        questionCircle2.isVisible = false
         RemoveCollisionListenersL1C2()
+        questionsAnswered = questionsAnswered + 1
+        UpdateHeartsL1()
+        UpdateTime()
 
         ResumeGame2()
     end 
@@ -203,11 +208,10 @@ local function TouchListenerWrongAnswer3(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        --decrease the lives/ update the number of hearts
-        UpdateHeartsL1() 
-        lives = lives - 1 
-        questionCircle2.isVisible = false
         RemoveCollisionListenersL1C2()
+        questionsAnswered = questionsAnswered + 1
+        UpdateHeartsL1()
+        UpdateTime()
 
         ResumeGame2()
     end 

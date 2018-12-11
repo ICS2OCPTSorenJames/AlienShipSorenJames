@@ -64,6 +64,8 @@ local heart2
 local heart3
 
 local floor
+local ceiling
+local rWall
 
 -----------------------------------------------------------------------------------------
 -- SOUNDS
@@ -138,7 +140,7 @@ function UpdateHeartsL1()
 end
 
 
-local function AddArrowEventListeners()
+function AddArrowEventListeners()
     rArrow:addEventListener("touch", right)
     uArrow:addEventListener("touch", up)
     lArrow:addEventListener("touch", left)
@@ -271,7 +273,7 @@ end
 
 function ReplaceCharacterL1Q2()
     character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
-    character.x = 660
+    character.x = 800
     character.y = 650
     character.width = 75
     character.height = 100
@@ -390,8 +392,18 @@ function scene:create( event )
 
     sceneGroup:insert( background )
 
+    character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
+    character.x = 655
+    character.y = 650
+    character.width = 75
+    character.height = 100
+    character.myName = "KickyKat"
+    character.isVisible = false
+
+    sceneGroup:insert( character )
+
     -- Insert the Hearts
-   --[[] heart1 = display.newImageRect("Images/heart.png", 80, 80)
+    heart1 = display.newImageRect("Images/heart.png", 80, 80)
     heart1.x = 50
     heart1.y = 50
     heart1.isVisible = true
@@ -415,7 +427,7 @@ function scene:create( event )
     heart3.isVisible = true
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
-    ---sceneGroup:insert( heart3 )]]
+    ---sceneGroup:insert( heart3 )
 
     --Insert the right arrow
     rArrow = display.newImageRect("Images/RightArrowUnpressed.png", 100, 50)
@@ -450,6 +462,28 @@ function scene:create( event )
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( floor )
+
+    --Insert the ceiling
+    ceiling = display.newImageRect("Images/Level-1Floor.png", 1024, 100)
+    ceiling.x = display.contentCenterX
+    ceiling.y = 5
+    physics.addBody(ceiling, "static", {friction=0.5, bounce=0.3})
+    ceiling:toBack()
+    ceiling.isVisible = false
+
+    -- Insert objects into the scene group in order to ONLY be associated with this scene
+    sceneGroup:insert( ceiling )
+
+    --Insert the right wall
+    rWall = display.newImageRect("Images/Rwall.png", 100, 1024)
+    rWall.x = 1000
+    rWall.y = display.contentCenterY
+    physics.addBody(rWall, "static", {friction=0.5, bounce=0.3})
+    rWall:toBack()
+    rWall.isVisible = false
+
+    -- Insert objects into the scene group in order to ONLY be associated with this scene
+    sceneGroup:insert( rWall )
 
     --create the circle
     questionCircle = display.newImageRect("Images/circle.png", 100, 100)
@@ -535,6 +569,7 @@ function scene:hide( event )
         -- Called when the scene is on screen (but is about to go off screen).
         -- Insert code here to "pause" the scene.
         -- Example: stop timers, stop animation, stop audio, etc.
+        YouWin()
 
     -----------------------------------------------------------------------------------------
 
