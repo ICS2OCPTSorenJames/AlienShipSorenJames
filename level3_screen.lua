@@ -117,7 +117,7 @@ end
 --create the game over image 
 local function GameOver()
     if (lives == 0) then
-        gameOver = display.newImageRect("Images/gameOver.png", 2048, 1536)
+        gameOver = display.newImageRect("Images/youLose.png", 2048, 1536)
         gameOverSoundChannel = audio.play(gameOverSound)
     end
 end
@@ -345,6 +345,8 @@ local function Lives()
         livesText.isVisible = false
     end
 end
+
+
 
 -----------------------------------------------------------------------------------------
 -- GLOBAL SCENE FUNCTIONS

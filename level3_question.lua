@@ -2,7 +2,7 @@
 --
 -- level1_screen.lua
 -- Created by: Allison
--- Date: May 16, 2017
+-- Edited by: Soren Drew
 -- Description: This is the level 1 screen of the game. the charater can be dragged to move
 --If character goes off a certain araea they go back to the start. When a user interactes
 --with piant a trivia question will come up. they will have a limided time to click on the answer
@@ -35,6 +35,7 @@ local scene = composer.newScene( sceneName )
 -- The local variables for this scene
 local questionText
 
+local randomOperation
 local firstNumber
 local secondNumber
 
@@ -67,9 +68,6 @@ local countDownTimer
 local questionsAnswered = 0
 
 local circle
-local heart1
-local heart2
-local heart3
 local lives = 3
 local livesText
 
@@ -98,7 +96,6 @@ local function GameOver()
 end
 
 
-
 --this function counts down the time
 local function UpdateTime()
 
@@ -109,11 +106,10 @@ local function UpdateTime()
     clockText.text = "Time: \n"  ..    secondsLeft
 
     if (secondsLeft == 0 ) then
-
         --reset the number of seconds left
         secondsLeft = totalSeconds
         -- decrease life
-        lives = lives - 1
+        lives = lives - 1 
         livesText.text = "lives:" .. lives
         -- call game over or ask another question
         GameOver()
@@ -121,34 +117,24 @@ local function UpdateTime()
 end
 
 --function that calls the timer
-local function StartTimer(event)
+local function StartTimer( event)
     --create a countdown timer that loops infintely
     countDownTimer = timer.performWithDelay( 1000, UpdateTime, 0)
 end
 
 function YouWin()
     if (questionsAnswered == 2) then 
-        composer.gotoScene( "YouWin" )
+        composer.gotoScene( "you_win" )
     end
 end
 
-local function ResumeGame2()
-    composer.hideOverlay("crossFade", 400)
+local function ResumeGame()
+    composer.hideOverlay("crossFade", 400 )
+    questionCircle.isVisible = false 
     RemoveCollisionListenersL1C1()
-    RemoveCollisionListenersL1C2()
-    ReplaceCharacterL1Q2()
-    AddArrowEventListeners()
+    ReplaceCharacterL1Q1()
 end
 
-local function Lives()
-    livesText = display.newText("lives:" .. lives, 100, 100, nil, 50)
-    livesText:setTextColor(1, 1, 1)
-    livesText.x = 100
-    livesText.y = 60
-    if (questionsAnswered == 1) then
-        livesText.isVisible = false
-    end
-end
 
 -----------------------------------------------------------------------------------------
 --checking to see if the user pressed the right answer and bring them back to level 1
@@ -157,11 +143,11 @@ local function TouchListenerAnswer(touch)
     
     if (touch.phase == "ended") then
         correctSoundChannel = audio.play(correctSound)
-        RemoveCollisionListenersL1C2()
-        questionsAnswered = questionsAnswered + 1
+        questionCircle.isVisible = false
+        RemoveCollisionListenersL1C1()
         UpdateTime()
 
-        ResumeGame2()  
+        ResumeGame()
     end 
 end
 
@@ -171,13 +157,11 @@ local function TouchListenerWrongAnswer(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        RemoveCollisionListenersL1C2()
-        questionsAnswered = questionsAnswered + 1
+        RemoveCollisionListenersL1C1()
         lives = lives - 1
         livesText.text = "lives:" .. lives
         UpdateTime()
-        
-        ResumeGame2()
+        ResumeGame()        
     end 
 end
 
@@ -187,13 +171,12 @@ local function TouchListenerWrongAnswer2(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        RemoveCollisionListenersL1C2()
-        questionsAnswered = questionsAnswered + 1
         lives = lives - 1
         livesText.text = "lives:" .. lives
+        RemoveCollisionListenersL1C1()
         UpdateTime()
 
-        ResumeGame2()
+        ResumeGame()  
     end 
 end
 
@@ -203,13 +186,12 @@ local function TouchListenerWrongAnswer3(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        RemoveCollisionListenersL1C2()
-        questionsAnswered = questionsAnswered + 1
+        RemoveCollisionListenersL1C1()
+        UpdateTime()
         lives = lives - 1
         livesText.text = "lives:" .. lives
-        UpdateTime()
 
-        ResumeGame2()
+        ResumeGame() 
     end 
 end
 
@@ -231,33 +213,65 @@ local function RemoveTextListeners()
 end
 
 local function DisplayQuestion()
-    --creating random numbers
-    firstNumber = math.random (0,15)
-    secondNumber = math.random (0,15)
+    randomOperation = math.random (1,2)
 
-    -- calculate answer
-    answer = firstNumber + secondNumber
+    if ( randomOperation == 1 ) then
 
-    -- calculate wrong answers
-    wrongAnswer1 = answer + math.random(1, 3)
-    wrongAnswer2 = answer + math.random(4, 6)
-    wrongAnswer3 = answer + math.random(7, 10)
+        --creating random numbers
+        firstNumber = math.random (0,20)
+        secondNumber = math.random (0,20)
+
+        -- calculate answer
+        answer = firstNumber + secondNumber
+
+        -- calculate wrong answers
+        wrongAnswer1 = answer + math.random(1, 3)
+        wrongAnswer2 = answer + math.random(4, 6)
+        wrongAnswer3 = answer + math.random(7, 10)
 
 
-    --creating the question depending on the selcetion number
-    questionText.text = firstNumber .. " + " .. secondNumber .. " ="
+        --creating the question depending on the selcetion number
+        questionText.text = firstNumber .. " + " .. secondNumber .. " ="
 
-    --creating answer text from list it corispondes with the animals list
-    answerText.text = answer
+        --creating answer text from list it corispondes with the animals list
+        answerText.text = answer
     
-    --creating wrong answers
-    wrongText1.text = wrongAnswer1
-    wrongText2.text = wrongAnswer2
-    wrongText3.text = wrongAnswer3
+        --creating wrong answers
+        wrongText1.text = wrongAnswer1
+        wrongText2.text = wrongAnswer2
+        wrongText3.text = wrongAnswer3
 
-    --start the timer
-    StartTimer()
+        --start the timer
+        StartTimer()
 
+    elseif ( randomOperation == 2 ) then
+        --creating random numbers
+        firstNumber = math.random (0,10)
+        secondNumber = math.random (0,10)
+
+        -- calculate answer
+        answer = firstNumber - secondNumber
+
+        -- calculate wrong answers
+        wrongAnswer1 = answer - math.random(1, 3)
+        wrongAnswer2 = answer - math.random(4, 6)
+        wrongAnswer3 = answer - math.random(7, 10)
+
+
+        --creating the question depending on the selcetion number
+        questionText.text = firstNumber .. " - " .. secondNumber .. " ="
+
+        --creating answer text from list it corispondes with the animals list
+        answerText.text = answer
+    
+        --creating wrong answers
+        wrongText1.text = wrongAnswer1
+        wrongText2.text = wrongAnswer2
+        wrongText3.text = wrongAnswer3
+
+        --start the timer
+        StartTimer()
+    end
 end
 
 local function PositionAnswers()
@@ -358,7 +372,7 @@ function scene:create( event )
 
     wrongText2 = display.newText("", X1, Y1, Arial, 75)
     wrongText2.anchorX = 0
-    
+
     wrongText3 = display.newText("", X2, Y1, Arial, 75)
     wrongText3.anchorX = 0
 
@@ -379,8 +393,9 @@ function scene:create( event )
     questionCircle.myName = "questionCircle"
     questionCircle:toBack()
     sceneGroup:insert( questionCircle )
-
     
+    
+
     questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
     questionCircle2.x = 650
     questionCircle2.y = 650
@@ -388,22 +403,24 @@ function scene:create( event )
     questionCircle2:toBack()
     sceneGroup:insert( questionCircle2 )
 
-    
 
-    
+    livesText = display.newText("lives:" .. lives, 100, 100, nil, 50)
+    livesText:setTextColor(1, 1, 1)
+    livesText.x = 100
+    livesText.y = 60
+
     -----------------------------------------------------------------------------------------
 
     -- insert all objects for this scene into the scene group
     sceneGroup:insert(bkg)
     sceneGroup:insert(cover)
-    sceneGroup:insert(character)
     sceneGroup:insert(questionText)
     sceneGroup:insert(answerText)
     sceneGroup:insert(wrongText1)
     sceneGroup:insert(wrongText2)
     sceneGroup:insert(wrongText3)
     sceneGroup:insert( clockText )
-    
+    sceneGroup:insert(character)
 
 end --function scene:create( event )
 
@@ -430,9 +447,9 @@ function scene:show( event )
         DisplayQuestion()
         PositionAnswers()
         AddTextListeners()
-        AddCollisionListenersL1C2()
-        Lives()
+        AddCollisionListenersL1C1()
     end
+
 end --function scene:show( event )
 
 -----------------------------------------------------------------------------------------

@@ -67,9 +67,6 @@ local countDownTimer
 local questionsAnswered = 0
 
 local circle
-local heart1
-local heart2
-local heart3
 local lives = 3
 local livesText
 
@@ -92,10 +89,7 @@ local incorrectSoundChannel
 --create the game over image 
 local function GameOver()
     if (lives == 0) then
-        heart3.isVisible = false
-        heart2.isVisible = false
-        heart1.isVisible = false
-        gameOver = display.newImageRect("Images/gameOver.png", 2048, 1536)
+        gameOver = display.newImageRect("Images/youLose.png", display.contentWidth, display.contentHeight)
         gameOverSoundChannel = audio.play(gameOverSound)
     end
 end
@@ -115,6 +109,7 @@ local function UpdateTime()
         secondsLeft = totalSeconds
         -- decrease life
         lives = lives - 1 
+        livesText.text = "lives:" .. lives
         -- call game over or ask another question
         GameOver()
     end       
@@ -127,8 +122,7 @@ local function StartTimer( event)
 end
 
 function YouWin()
-    if (character.x == 850) and 
-        (questionsAnswered == 2) then 
+    if (questionsAnswered == 2) then 
         composer.gotoScene( "you_win" )
     end
 end
@@ -148,6 +142,7 @@ local function TouchListenerAnswer(touch)
     
     if (touch.phase == "ended") then
         correctSoundChannel = audio.play(correctSound)
+        questionsAnswered = questionsAnswered + 1
         questionCircle.isVisible = false
         RemoveCollisionListenersL1C1()
         UpdateTime()
@@ -163,6 +158,7 @@ local function TouchListenerWrongAnswer(touch)
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
         RemoveCollisionListenersL1C1()
+        questionsAnswered = questionsAnswered + 1
         lives = lives - 1
         livesText.text = "lives:" .. lives
         UpdateTime()
@@ -176,6 +172,7 @@ local function TouchListenerWrongAnswer2(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
+        questionsAnswered = questionsAnswered + 1
         lives = lives - 1
         livesText.text = "lives:" .. lives
         RemoveCollisionListenersL1C1()
@@ -193,6 +190,7 @@ local function TouchListenerWrongAnswer3(touch)
         incorrectSoundChannel = audio.play(incorrectSound)
         RemoveCollisionListenersL1C1()
         UpdateTime()
+        questionsAnswered = questionsAnswered + 1
         lives = lives - 1
         livesText.text = "lives:" .. lives
 
@@ -376,13 +374,11 @@ function scene:create( event )
     questionCircle2:toBack()
     sceneGroup:insert( questionCircle2 )
 
-    
 
     livesText = display.newText("lives:" .. lives, 100, 100, nil, 50)
     livesText:setTextColor(1, 1, 1)
     livesText.x = 100
     livesText.y = 60
-    
 
     -----------------------------------------------------------------------------------------
 
@@ -395,6 +391,7 @@ function scene:create( event )
     sceneGroup:insert(wrongText2)
     sceneGroup:insert(wrongText3)
     sceneGroup:insert( clockText )
+    sceneGroup:insert(character)
 
 end --function scene:create( event )
 

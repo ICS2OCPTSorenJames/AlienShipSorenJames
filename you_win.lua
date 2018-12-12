@@ -44,7 +44,7 @@ function scene:create( event )
     local sceneGroup = self.view
 
     -- Display background
-    bkg = display.newImage("Images/YouWin.png")
+    bkg = display.newImage("Images/youWin.png")
     bkg.x = display.contentCenterX
     bkg.y = display.contentCenterY
     bkg.width = display.contentWidth
@@ -55,10 +55,10 @@ function scene:create( event )
     -----------------------------------------------------------------------------------------
     -- SOUNDS
     -----------------------------------------------------------------------------------------
-    local youWinSound = audio.loadSound("Sounds/Cheer.m4a")
+    --[[local youWinSound = audio.loadSound("Sounds/Cheer.m4a")
     local youWinSoundChannel
 
-    youWinSoundChannel = audio.play(youWinSound) 
+    youWinSoundChannel = audio.play(youWinSound)]] 
 end    
 
 -----------------------------------------------------------------------------------------
