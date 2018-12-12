@@ -43,7 +43,7 @@ local instructionsButton
 -- SOUNDS
 -----------------------------------------------------------------------------------------
 
-local bkgMusic = audio.loadSound("Sounds/energySong.mp3")
+local bkgMusic = audio.loadSound("Sounds/booSound.mp3")
 local bkgMusicChannel
 
 -----------------------------------------------------------------------------------------
@@ -130,7 +130,7 @@ function scene:create( event )
             height = 200,
 
             -- Insert the images here
-            defaultFile = "Images/creditsButtonUnPressed.png", 
+            defaultFile = "Images/creditsButtonUnpressed.png", 
             overFile = "Images/creditsButtonPressed.png", 
 
             -- When the button is released, call the Credits transition function
