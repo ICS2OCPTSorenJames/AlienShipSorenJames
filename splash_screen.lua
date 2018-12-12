@@ -30,8 +30,8 @@ local comet2
 local scrollSpeedComet1 = 6
 local scrollSpeedComet2 = 6
 
-FlossBoss = display.newImageRect("Images/companyLogoSoren.png", 600, 600)
-FlossBoss2 = display.newImageRect("Images/companyLogoGlow.png", 600, 600)
+FlossBoss = display.newImageRect("Images/CompanyLogoSoren.png", 600, 600)
+FlossBoss2 = display.newImageRect("Images/CompanyLogoGlow.png", 600, 600)
     
 comet1 = display.newImageRect("Images/comet.png", 150, 150)
 comet2 = display.newImageRect("Images/comet.png", 150, 150)
@@ -48,10 +48,10 @@ FlossBoss2.isVisible = false
 -- SOUNDS
 -----------------------------------------------------------------------------------------
  
-local swooshSound1 = audio.loadSound("Sounds/swoosh.mp3")
+local swooshSound1 = audio.loadSound("Sounds/booSound.mp3")
 local swooshSoundChannel1
 
-local swooshSound2 = audio.loadSound("Sounds/swoosh2.mp3")
+local swooshSound2 = audio.loadSound("Sounds/booSound.mp3")
 local swooshSoundChannel2
 
 
@@ -176,8 +176,8 @@ function scene:hide( event )
         FlossBoss2.isVisible = false  
         comet2.isVisible = false 
         --stop the audio
-       audio.stop(swooshSoundChannel2)
-       audio.stop(swooshSoundChannel1)
+       --audio.stop(swooshSoundChannel2)
+       --audio.stop(swooshSoundChannel1)
     end
 
 end --function scene:hide( event )
