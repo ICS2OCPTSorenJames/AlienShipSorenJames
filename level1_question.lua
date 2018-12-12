@@ -129,7 +129,7 @@ end
 function YouWin()
     if (character.x == 850) and 
         (questionsAnswered == 2) then 
-        composer.gotoScene( "YouWin" )
+        composer.gotoScene( "you_win" )
     end
 end
 
