@@ -59,9 +59,7 @@ local correctText
 local incorrectText
 
 local lives = 3
-local heart1
-local heart2
-local heart3
+local livesText
 
 local floor
 local ceiling
@@ -124,18 +122,6 @@ local function GameOver()
         heart1.isVisible = false
         gameOver = display.newImageRect("Images/gameOver.png", 2048, 1536)
         gameOverSoundChannel = audio.play(gameOverSound)
-    end
-end
-
---update the visibility of the hearts
-function UpdateHeartsL1()
-
-    if (lives == 2 ) then 
-        heart3.isVisible = false
-    elseif (lives == 1) then
-        heart2.isVisible = false
-    elseif (lives == 0) then
-    GameOver()
     end
 end
 
@@ -402,32 +388,6 @@ function scene:create( event )
 
     sceneGroup:insert( character )
 
-    -- Insert the Hearts
-    heart1 = display.newImageRect("Images/heart.png", 80, 80)
-    heart1.x = 50
-    heart1.y = 50
-    heart1.isVisible = true
-
-    -- Insert objects into the scene group in order to ONLY be associated with this scene
-    --sceneGroup:insert( heart1 )
-
-    -- Insert the Hearts
-    heart2 = display.newImageRect("Images/heart.png", 80, 80)
-    heart2.x = 130
-    heart2.y = 50
-    heart2.isVisible = true
-
-    -- Insert objects into the scene group in order to ONLY be associated with this scene
-    --sceneGroup:insert( heart2 )
-
-    -- Insert the Hearts
-    heart3 = display.newImageRect("Images/heart.png", 80, 80)
-    heart3.x = 210
-    heart3.y = 50
-    heart3.isVisible = true
-
-    -- Insert objects into the scene group in order to ONLY be associated with this scene
-    ---sceneGroup:insert( heart3 )
 
     --Insert the right arrow
     rArrow = display.newImageRect("Images/RightArrowUnpressed.png", 100, 50)
@@ -503,7 +463,14 @@ function scene:create( event )
     questionCircle2:toBack()
     
 
-    sceneGroup:insert( questionCircle2 )    
+    sceneGroup:insert( questionCircle2 )   
+
+
+    livesText = display.newText("lives:" .. lives, 100, 100, nil, 50)
+    livesText:setTextColor(1, 1, 1)
+    livesText.x = 100
+    livesText.y = 60
+     
 end
 
 ----------------------------------------------------------------------------------------

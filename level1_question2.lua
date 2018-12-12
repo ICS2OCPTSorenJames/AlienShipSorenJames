@@ -71,6 +71,7 @@ local heart1
 local heart2
 local heart3
 local lives = 3
+local livesText
 
 -----------------------------------------------------------------------------------------
 --SOUNDS
@@ -99,17 +100,6 @@ local function GameOver()
     end
 end
 
---update the visibility of the hearts
-function UpdateHeartsL1()
-
-    if (lives == 2 ) then 
-        heart3.isVisible = false
-    elseif (lives == 1) then
-        heart2.isVisible = false
-    elseif (lives == 0) then
-    GameOver()
-    end
-end
 
 
 --this function counts down the time
@@ -126,9 +116,7 @@ local function UpdateTime()
         --reset the number of seconds left
         secondsLeft = totalSeconds
         -- decrease life
-        lives = lives - 1 
-        -- update the hearts
-        UpdateHeartsL1()
+        lives = lives - 1
         -- call game over or ask another question
         GameOver()
     end       
@@ -165,7 +153,6 @@ local function TouchListenerAnswer(touch)
         correctSoundChannel = audio.play(correctSound)
         RemoveCollisionListenersL1C2()
         questionsAnswered = questionsAnswered + 1
-        UpdateHeartsL1()
         UpdateTime()
 
         ResumeGame2()  
@@ -180,7 +167,8 @@ local function TouchListenerWrongAnswer(touch)
         incorrectSoundChannel = audio.play(incorrectSound)
         RemoveCollisionListenersL1C2()
         questionsAnswered = questionsAnswered + 1
-        UpdateHeartsL1()
+        lives = lives - 1
+        livesText.text = "lives:" .. lives
         UpdateTime()
         
         ResumeGame2()
@@ -195,7 +183,8 @@ local function TouchListenerWrongAnswer2(touch)
         incorrectSoundChannel = audio.play(incorrectSound)
         RemoveCollisionListenersL1C2()
         questionsAnswered = questionsAnswered + 1
-        UpdateHeartsL1()
+        lives = lives - 1
+        livesText.text = "lives:" .. lives
         UpdateTime()
 
         ResumeGame2()
@@ -210,7 +199,8 @@ local function TouchListenerWrongAnswer3(touch)
         incorrectSoundChannel = audio.play(incorrectSound)
         RemoveCollisionListenersL1C2()
         questionsAnswered = questionsAnswered + 1
-        UpdateHeartsL1()
+        lives = lives - 1
+        livesText.text = "lives:" .. lives
         UpdateTime()
 
         ResumeGame2()
@@ -262,7 +252,6 @@ local function DisplayQuestion()
     --start the timer
     StartTimer()
 
-    UpdateHeartsL1()
 end
 
 local function PositionAnswers()
@@ -377,23 +366,6 @@ function scene:create( event )
     circle.y = display.contentHeight * 2.08
     circle.isVisible = false
 
-    -- Insert the Hearts
-    heart1 = display.newImageRect("Images/heart.png", 80, 80)
-    heart1.x = 50
-    heart1.y = 50
-    heart1.isVisible = true
-
-    -- Insert the Hearts
-    heart2 = display.newImageRect("Images/heart.png", 80, 80)
-    heart2.x = 130
-    heart2.y = 50
-    heart2.isVisible = true
-
-    -- Insert the Hearts
-    heart3 = display.newImageRect("Images/heart.png", 80, 80)
-    heart3.x = 210
-    heart3.y = 50
-    heart3.isVisible = true
 
     questionCircle = display.newImageRect("Images/circle.png", 100, 100)
     questionCircle.x = 350
@@ -409,6 +381,11 @@ function scene:create( event )
     questionCircle2.myName = "questionCircle2"
     questionCircle2:toBack()
     sceneGroup:insert( questionCircle2 )
+
+    livesText = display.newText("lives:" .. lives, 100, 100, nil, 50)
+    livesText:setTextColor(1, 1, 1)
+    livesText.x = 100
+    livesText.y = 60
 
     
     -----------------------------------------------------------------------------------------
