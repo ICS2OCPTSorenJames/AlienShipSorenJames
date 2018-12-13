@@ -44,7 +44,7 @@ local questionsAnswered = 0
 local circle
 local circle2
 
-local chracter
+local character
 
 local rArrow 
 local uArrow
@@ -119,6 +119,12 @@ local function GameOver()
     if (lives == 0) then
         gameOver = display.newImageRect("Images/gameOver.png", 2048, 1536)
         gameOverSoundChannel = audio.play(gameOverSound)
+    end
+end
+
+function YouWin()
+    if (questionsAnswered == 2) then 
+        composer.gotoScene( "you_win" )
     end
 end
 
@@ -205,8 +211,7 @@ local function onCollision( self, event )
 end
 
 
-
-function ReplaceCharacterL1()
+local function ReplaceCharacterL1()
     character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
     character.x = 100
     character.y = 650
@@ -229,6 +234,7 @@ function ReplaceCharacterL1()
     -- add back runtime listeners
     AddRuntimeListeners()
 end
+
 
 function ReplaceCharacterL1Q1()
     character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
@@ -353,6 +359,7 @@ end
 --this fuction is called when the scene doesn't exist
 function scene:create( event )
 
+
 	-- Creating a group that associates objects with the scene
     local sceneGroup = self.view
 
@@ -391,7 +398,7 @@ function scene:create( event )
     character.myName = "KickyKat"
     character.isVisible = false
 
-    sceneGroup:insert( character )
+    sceneGroup:insert( character ) 
 
 
     --Insert the right arrow
@@ -468,8 +475,8 @@ function scene:create( event )
     questionCircle2:toBack()
     
 
-    sceneGroup:insert( questionCircle2 )   
-
+    sceneGroup:insert( questionCircle2 )  
+    
 end
 
 
