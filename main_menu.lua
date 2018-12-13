@@ -43,7 +43,7 @@ local instructionsButton
 -- SOUNDS
 -----------------------------------------------------------------------------------------
 
-local bkgMusic = audio.loadSound("Sounds/booSound.mp3")
+local bkgMusic = audio.loadSound("Sounds/MainMenuMusic.mp3")
 local bkgMusicChannel
 
 -----------------------------------------------------------------------------------------
