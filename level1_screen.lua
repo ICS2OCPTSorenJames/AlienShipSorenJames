@@ -376,6 +376,8 @@ function scene:create( event )
             defaultFile = "Images/backButtonUnpressed.png",
             overFile = "Images/backButtonPressed.png",
 
+            motionx = 0,
+
             -- When the button is released, call the Level1 screen transition function
             onRelease = BackTransition       
         } )
