@@ -30,58 +30,16 @@ local comet2
 local scrollSpeedComet1 = 6
 local scrollSpeedComet2 = 6
 
-FlossBoss = display.newImageRect("Images/CompanyLogoSoren.png", 600, 600)
-FlossBoss2 = display.newImageRect("Images/CompanyLogoGlow.png", 600, 600)
-    
-comet1 = display.newImageRect("Images/comet.png", 150, 150)
-comet2 = display.newImageRect("Images/comet.png", 150, 150)
 
-comet1.x = 0
-comet1.y = 450
-
-comet2.x = 1024
-comet2.y = 150
-
-FlossBoss.isVisible = true
-FlossBoss2.isVisible = false
 ----------------------------------------------------------------------------------------
 -- SOUNDS
 -----------------------------------------------------------------------------------------
  
-local swooshSound1 = audio.loadSound("Sounds/booSound.mp3")
+local swooshSound1 = audio.loadSound("Sounds/swoosh.mp3")
 local swooshSoundChannel1
 
-local swooshSound2 = audio.loadSound("Sounds/booSound.mp3")
+local swooshSound2 = audio.loadSound("Sounds/swoosh2.mp3")
 local swooshSoundChannel2
-
-
------------------------------------------------------------------------------------------
--- GLOBAL SCENE FUNCTIONS
------------------------------------------------------------------------------------------
-
--- The function called when the screen doesn't exist
-function scene:create( event )
-
-    -- Creating a group that associates objects with the scene
-    local sceneGroup = self.view
-
-    -- create the background image
-    local background = display.newImageRect("Images/background.jfif", 2048, 1536)
-
-    --put the background in the back layer
-    background:toBack()
-
-    -- set the initial x and y position of the flossBosses
-    FlossBoss.x = 570
-    FlossBoss.y = 350
-
-    FlossBoss2.x = 570
-    FlossBoss2.y = 350
-
-    -- Insert objects into the scene group in order to ONLY be associated with this scene
-    sceneGroup:insert( FlossBoss )
-
-end -- function scene:create( event )
 
 --------------------------------------------------------------------------------------------
 -- LOCAL FUNCTIONS
@@ -91,13 +49,13 @@ end -- function scene:create( event )
 local function moveComet1(event)
     comet1.x = comet1.x + scrollSpeedComet1
     comet1.y = comet1.y - scrollSpeedComet1
-    --play the sound
-    swooshSoundChannel1 = audio.play(swooshSound1)
+    
     --change the image and stop the sound
     if (comet1.y == 0) then 
         FlossBoss.isVisible = false
         FlossBoss2.isVisible = true
-        audio.pause(swooshSoundChannel1)
+        Runtime:removeEventListener("enterFrame", moveComet1)
+        
     end
 end
 
@@ -116,9 +74,57 @@ end
 
 
 -- The function that will go to the main menu 
-local function gotoMainMenu()
-    composer.gotoScene( "main_menu" )
+local function gotoSplashScreen2()
+    composer.gotoScene( "splash_screen2" )
 end
+
+-----------------------------------------------------------------------------------------
+-- GLOBAL SCENE FUNCTIONS
+-----------------------------------------------------------------------------------------
+
+-- The function called when the screen doesn't exist
+function scene:create( event )
+
+    -- Creating a group that associates objects with the scene
+    local sceneGroup = self.view
+
+    -- create the background image
+    local background = display.newImageRect("Images/background.jfif", 2048, 1536)
+
+
+    FlossBoss = display.newImageRect("Images/companyLogoSoren.png", 600, 600)
+    FlossBoss2 = display.newImageRect("Images/companyLogoGlow.png", 600, 600)
+    
+    comet1 = display.newImageRect("Images/Comet.png", 150, 150)
+    comet2 = display.newImageRect("Images/Comet.png", 150, 150)
+
+    -- set the initial x and y position of the flossBosses
+    comet1.x = 0
+    comet1.y = 450
+
+    comet2.x = 1024
+    comet2.y = 150
+
+    FlossBoss.isVisible = true
+    FlossBoss2.isVisible = false
+
+    FlossBoss.x = 570
+    FlossBoss.y = 350
+
+    FlossBoss2.x = 570
+    FlossBoss2.y = 350
+
+    -- Insert objects into the scene group in order to ONLY be associated with this scene
+    sceneGroup:insert( background )
+    sceneGroup:insert( comet1 )
+    sceneGroup:insert( comet2 )
+    sceneGroup:insert( FlossBoss )
+    sceneGroup:insert( FlossBoss2 )
+
+
+end -- function scene:create( event )
+
+
 
 --------------------------------------------------------------------------------------------
 
@@ -140,12 +146,14 @@ function scene:show( event )
     -----------------------------------------------------------------------------------------
 
     elseif ( phase == "did" ) then
+        --play the sound
+        swooshSoundChannel1 = audio.play(swooshSound1)
         -- Call the movecomet1 and movecomet2 function as soon as we enter the frame.
         Runtime:addEventListener("enterFrame", moveComet1)
-        Runtime:addEventListener("enterFrame", moveComet2)
+        --Runtime:addEventListener("enterFrame", moveComet2)
 
         -- Go to the main menu screen after the given time.
-        timer.performWithDelay ( 3000, gotoMainMenu)          
+        timer.performWithDelay ( 3000, gotoSplashScreen2)          
         
     end
 
@@ -171,13 +179,9 @@ function scene:hide( event )
 
     -- Called immediately after scene goes off screen.
     elseif ( phase == "did" ) then
-        --make the logo invisible after the animation is finished
-        FlossBoss.isVisible = false
-        FlossBoss2.isVisible = false  
-        comet2.isVisible = false 
         --stop the audio
-       --audio.stop(swooshSoundChannel2)
-       --audio.stop(swooshSoundChannel1)
+       audio.stop(swooshSoundChannel2)
+       audio.stop(swooshSoundChannel1)
     end
 
 end --function scene:hide( event )
