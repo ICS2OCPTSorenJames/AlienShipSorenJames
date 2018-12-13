@@ -64,7 +64,7 @@ local totalSeconds = 20
 local secondsLeft = 20
 local clockText
 local countDownTimer
-local questionsAnswered = 0
+questionsAnswered = 0
 
 local circle
 local heart1
@@ -396,7 +396,6 @@ function scene:create( event )
     -- insert all objects for this scene into the scene group
     sceneGroup:insert(bkg)
     sceneGroup:insert(cover)
-    sceneGroup:insert(character)
     sceneGroup:insert(questionText)
     sceneGroup:insert(answerText)
     sceneGroup:insert(wrongText1)

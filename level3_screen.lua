@@ -122,6 +122,13 @@ local function GameOver()
     end
 end
 
+function YouWin()
+    if (questionsAnswered == 2) then 
+        composer.gotoScene( "you_win" )
+    end
+end
+
+
 
 function AddArrowEventListeners()
     rArrow:addEventListener("touch", right)
@@ -175,7 +182,7 @@ local function onCollision( self, event )
             character.isVisible = false
 
             -- show overlay with math question
-            composer.showOverlay( "level1_question", { isModal = true, effect = "fade", time = 100})
+            composer.showOverlay( "level3_question", { isModal = true, effect = "fade", time = 100})
 
             -- Increment questions answered
             questionsAnswered = questionsAnswered + 1
@@ -196,7 +203,7 @@ local function onCollision( self, event )
                 character.isVisible = false
 
                 -- show overlay with math question
-                composer.showOverlay( "level1_question2", { isModal = true, effect = "fade", time = 100})
+                composer.showOverlay( "level3_question2", { isModal = true, effect = "fade", time = 100})
                 
                 -- Increment questions answered
                 questionsAnswered = questionsAnswered + 1
@@ -230,7 +237,7 @@ function ReplaceCharacterL1()
     AddRuntimeListeners()
 end
 
-function ReplaceCharacterL1Q1()
+function ReplaceCharacterL3Q1()
     character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
     character.x = 450
     character.y = 650
@@ -254,7 +261,7 @@ function ReplaceCharacterL1Q1()
     AddRuntimeListeners()
 end
 
-function ReplaceCharacterL1Q2()
+function ReplaceCharacterL3Q2()
     character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
     character.x = 800
     character.y = 650
@@ -293,25 +300,25 @@ local function RemovePhysicsBodies()
 end
 
 --add collision to the first circle
-function AddCollisionListenersL1C1()
+function AddCollisionListenersL3C1()
 	--if they hit the circle on collision will be called
 	questionCircle.collision = onCollision
     questionCircle:addEventListener( "collision" )
 end
 
 --add collision to the second circle
-function AddCollisionListenersL1C2()
+function AddCollisionListenersL3C2()
     questionCircle2.collision = onCollision
     questionCircle2:addEventListener( "collision" )
 end
 
 --remove collision to the first circle
-function RemoveCollisionListenersL1C1()
+function RemoveCollisionListenersL3C1()
 	questionCircle:removeEventListener( "collision" )
 end
 
 --remove collision to the second circle
-function RemoveCollisionListenersL1C2()
+function RemoveCollisionListenersL3C2()
     questionCircle2:removeEventListener( "collision" )
 end
 
@@ -515,8 +522,8 @@ function scene:show( event )
         AddPhysicsBodies()
 
         -- add collision listeners to objects
-        AddCollisionListenersL1C1()
-        AddCollisionListenersL1C2()
+        AddCollisionListenersL3C1()
+        AddCollisionListenersL3C2()
 
         -- create the character, add physics bodies and runtime listeners
         ReplaceCharacterL1()

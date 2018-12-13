@@ -76,7 +76,6 @@ local gameOverSoundChannel
 -- LOCAL FUNCTIONS
 -----------------------------------------------------------------------------------------
 
-
 -- When right arrow is touched, move character right
 local function right (touch)
     motionx = SPEED
@@ -100,6 +99,7 @@ end
 local function movePlayer (event)
     character.x = character.x + motionx
 end
+
  
 -- Stop character movement when no arrow is pushed
 local function stop (event)
@@ -236,6 +236,8 @@ local function ReplaceCharacterL1()
 end
 
 
+
+
 function ReplaceCharacterL1Q1()
     character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
     character.x = 450
@@ -283,8 +285,6 @@ function ReplaceCharacterL1Q2()
     -- add back runtime listeners
     AddRuntimeListeners()
 end
-
-
 
 
 local function AddPhysicsBodies()

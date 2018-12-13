@@ -1,8 +1,7 @@
 -----------------------------------------------------------------------------------------
 --
 -- level1_screen.lua
--- Created by: Allison
--- Edited by: Soren Drew
+-- Created by: Soren Drew
 -- Description: This is the level 1 screen of the game. the charater can be dragged to move
 --If character goes off a certain araea they go back to the start. When a user interactes
 --with piant a trivia question will come up. they will have a limided time to click on the answer
@@ -21,7 +20,7 @@ local physics = require( "physics")
 -----------------------------------------------------------------------------------------
 
 -- Naming Scene
-sceneName = "level1_question"
+sceneName = "level3_question"
 
 -----------------------------------------------------------------------------------------
 
@@ -131,8 +130,8 @@ end
 local function ResumeGame()
     composer.hideOverlay("crossFade", 400 )
     questionCircle.isVisible = false 
-    RemoveCollisionListenersL1C1()
-    ReplaceCharacterL1Q1()
+    RemoveCollisionListenersL3C1()
+    ReplaceCharacterL3Q1()
 end
 
 
@@ -144,7 +143,7 @@ local function TouchListenerAnswer(touch)
     if (touch.phase == "ended") then
         correctSoundChannel = audio.play(correctSound)
         questionCircle.isVisible = false
-        RemoveCollisionListenersL1C1()
+        RemoveCollisionListenersL3C1()
         UpdateTime()
 
         ResumeGame()
@@ -157,7 +156,7 @@ local function TouchListenerWrongAnswer(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        RemoveCollisionListenersL1C1()
+        RemoveCollisionListenersL3C1()
         lives = lives - 1
         livesText.text = "lives:" .. lives
         UpdateTime()
@@ -173,7 +172,7 @@ local function TouchListenerWrongAnswer2(touch)
         incorrectSoundChannel = audio.play(incorrectSound)
         lives = lives - 1
         livesText.text = "lives:" .. lives
-        RemoveCollisionListenersL1C1()
+        RemoveCollisionListenersL3C1()
         UpdateTime()
 
         ResumeGame()  
@@ -186,7 +185,7 @@ local function TouchListenerWrongAnswer3(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        RemoveCollisionListenersL1C1()
+        RemoveCollisionListenersL3C1()
         UpdateTime()
         lives = lives - 1
         livesText.text = "lives:" .. lives
@@ -194,6 +193,8 @@ local function TouchListenerWrongAnswer3(touch)
         ResumeGame() 
     end 
 end
+
+
 
 
 --adding the event listeners 
@@ -420,7 +421,6 @@ function scene:create( event )
     sceneGroup:insert(wrongText2)
     sceneGroup:insert(wrongText3)
     sceneGroup:insert( clockText )
-    sceneGroup:insert(character)
 
 end --function scene:create( event )
 
@@ -447,7 +447,7 @@ function scene:show( event )
         DisplayQuestion()
         PositionAnswers()
         AddTextListeners()
-        AddCollisionListenersL1C1()
+        AddCollisionListenersL3C1()
     end
 
 end --function scene:show( event )

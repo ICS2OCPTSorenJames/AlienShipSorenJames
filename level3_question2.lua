@@ -21,7 +21,7 @@ local physics = require( "physics")
 -----------------------------------------------------------------------------------------
 
 -- Naming Scene
-sceneName = "level1_question"
+sceneName = "level3_question2"
 
 -----------------------------------------------------------------------------------------
 
@@ -127,17 +127,16 @@ local function StartTimer(event)
 end
 
 function YouWin()
-    if (character.x == 900) and 
-        (questionsAnswered == 2) then 
+    if (questionsAnswered == 2) then 
         composer.gotoScene( "YouWin" )
     end
 end
 
 local function ResumeGame2()
     composer.hideOverlay("crossFade", 400)
-    RemoveCollisionListenersL1C1()
-    RemoveCollisionListenersL1C2()
-    ReplaceCharacterL1Q2()
+    RemoveCollisionListenersL3C1()
+    RemoveCollisionListenersL3C2()
+    ReplaceCharacterL3Q2()
     AddArrowEventListeners()
 end
 
@@ -158,7 +157,7 @@ local function TouchListenerAnswer(touch)
     
     if (touch.phase == "ended") then
         correctSoundChannel = audio.play(correctSound)
-        RemoveCollisionListenersL1C2()
+        RemoveCollisionListenersL3C2()
         questionsAnswered = questionsAnswered + 1
         UpdateTime()
 
@@ -172,7 +171,7 @@ local function TouchListenerWrongAnswer(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        RemoveCollisionListenersL1C2()
+        RemoveCollisionListenersL3C2()
         questionsAnswered = questionsAnswered + 1
         lives = lives - 1
         livesText.text = "lives:" .. lives
@@ -188,7 +187,7 @@ local function TouchListenerWrongAnswer2(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        RemoveCollisionListenersL1C2()
+        RemoveCollisionListenersL3C2()
         questionsAnswered = questionsAnswered + 1
         lives = lives - 1
         livesText.text = "lives:" .. lives
@@ -204,7 +203,7 @@ local function TouchListenerWrongAnswer3(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        RemoveCollisionListenersL1C2()
+        RemoveCollisionListenersL3C2()
         questionsAnswered = questionsAnswered + 1
         lives = lives - 1
         livesText.text = "lives:" .. lives
@@ -428,7 +427,6 @@ function scene:create( event )
     -- insert all objects for this scene into the scene group
     sceneGroup:insert(bkg)
     sceneGroup:insert(cover)
-    sceneGroup:insert(character)
     sceneGroup:insert(questionText)
     sceneGroup:insert(answerText)
     sceneGroup:insert(wrongText1)
@@ -462,7 +460,7 @@ function scene:show( event )
         DisplayQuestion()
         PositionAnswers()
         AddTextListeners()
-        AddCollisionListenersL1C2()
+        AddCollisionListenersL3C2()
         Lives()
     end
 end --function scene:show( event )

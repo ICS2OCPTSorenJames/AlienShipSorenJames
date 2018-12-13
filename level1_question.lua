@@ -63,7 +63,7 @@ local totalSeconds = 20
 local secondsLeft = 20
 local clockText
 local countDownTimer
-local questionsAnswered = 0
+questionsAnswered = 0
 
 local circle
 local lives = 3
