@@ -196,26 +196,26 @@ local function onCollision( self, event )
             -- Increment questions answered
             questionsAnswered = questionsAnswered + 1
 
-            elseif (event.target.myName == "questionCircle2") then
+        elseif (event.target.myName == "questionCircle2") then
 
-                -- remove runtime listeners that move the character
-                RemoveArrowEventListeners()
-                RemoveRuntimeListeners()
+            -- remove runtime listeners that move the character
+            RemoveArrowEventListeners()
+            RemoveRuntimeListeners()
 
                 -- remove the character from the display
                 --display.remove(character)
 
-                -- stop the character from moving
-                motionx = 0
+            -- stop the character from moving
+            motionx = 0
 
-                -- make the character invisible
-                character.isVisible = false
+            -- make the character invisible
+            character.isVisible = false
 
-                -- show overlay with math question
-                composer.showOverlay( "level1_question2", { isModal = true, effect = "fade", time = 100})
+            -- show overlay with math question
+            composer.showOverlay( "level1_question", { isModal = true, effect = "fade", time = 100})
                 
-                -- Increment questions answered
-                questionsAnswered = questionsAnswered + 1
+            -- Increment questions answered
+            questionsAnswered = questionsAnswered + 1
         end
     end
 end
@@ -255,8 +255,8 @@ local function AddPhysicsBodies()
 end
 
 local function RemovePhysicsBodies()
-    physics.removeBody(questionCircle)
-    physics.removeBody(questionCircle2)
+    --physics.removeBody(questionCircle)
+    --physics.removeBody(questionCircle2)
     physics.removeBody(floor)
     physics.removeBody(ceiling)
     physics.removeBody(rWall)
