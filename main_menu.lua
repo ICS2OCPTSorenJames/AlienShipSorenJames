@@ -68,10 +68,6 @@ local function InstructionsTransition( )
     composer.gotoScene( "instructions_screen", {effect = "fromLeft", time = 1000})
 end 
 
-local function Mute()
-    audio.stop()
-end
-
 
 -----------------------------------------------------------------------------------------
 -- GLOBAL SCENE FUNCTIONS
