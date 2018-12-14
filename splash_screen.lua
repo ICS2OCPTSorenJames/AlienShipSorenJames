@@ -35,8 +35,6 @@ local scrollSpeedComet2 = 6
 -- SOUNDS
 -----------------------------------------------------------------------------------------
  
-local swooshSound1 = audio.loadSound("Sounds/swoosh.mp3")
-local swooshSoundChannel1
 
 local swooshSound2 = audio.loadSound("Sounds/swoosh2.mp3")
 local swooshSoundChannel2
@@ -45,33 +43,19 @@ local swooshSoundChannel2
 -- LOCAL FUNCTIONS
 --------------------------------------------------------------------------------------------
 
+
+-- The function moves the second comet across the screen
+local function moveComet2(event)
+    comet2.x = comet2.x - scrollSpeedComet2
+    comet2.y = comet2.y + scrollSpeedComet2    
+end
+
 -- The function moves the first comet across the screen
 local function moveComet1(event)
     comet1.x = comet1.x + scrollSpeedComet1
     comet1.y = comet1.y - scrollSpeedComet1
     
-    --change the image and stop the sound
-    if (comet1.y == 0) then 
-        FlossBoss.isVisible = false
-        FlossBoss2.isVisible = true
-        Runtime:removeEventListener("enterFrame", moveComet1)
-        
-    end
 end
-
--- The function moves the second comet across the screen
-local function moveComet2(event)
-    comet2.x = comet2.x - scrollSpeedComet2
-    comet2.y = comet2.y + scrollSpeedComet2
-    --play the sound after a delay
-    swooshSoundChannel2 = audio.play(swooshSound2)
-    timer.performWithDelay(500, swooshSoundChannel2)
-    --stop the sound once it is off the screen
-    if (comet2.y == 500 ) then
-        audio.pause(swooshSoundChannel2)
-    end
-end
-
 
 -- The function that will go to the main menu 
 local function gotoSplashScreen2()
@@ -107,6 +91,8 @@ function scene:create( event )
 
     FlossBoss.isVisible = true
     FlossBoss2.isVisible = false
+
+    comet1:rotate(180)
 
     FlossBoss.x = 570
     FlossBoss.y = 350
@@ -146,14 +132,15 @@ function scene:show( event )
     -----------------------------------------------------------------------------------------
 
     elseif ( phase == "did" ) then
-        --play the sound
-        swooshSoundChannel1 = audio.play(swooshSound1)
+        --play the sound    
+        swooshSoundChannel2 = audio.play(swooshSound2)
+
         -- Call the movecomet1 and movecomet2 function as soon as we enter the frame.
         Runtime:addEventListener("enterFrame", moveComet1)
-        --Runtime:addEventListener("enterFrame", moveComet2)
+        Runtime:addEventListener("enterFrame", moveComet2)
 
         -- Go to the main menu screen after the given time.
-        timer.performWithDelay ( 3000, gotoSplashScreen2)          
+        timer.performWithDelay ( 2500, gotoSplashScreen2)          
         
     end
 
@@ -181,7 +168,9 @@ function scene:hide( event )
     elseif ( phase == "did" ) then
         --stop the audio
        audio.stop(swooshSoundChannel2)
-       audio.stop(swooshSoundChannel1)
+
+       Runtime:removeEventListener("enterFrame", moveComet1)
+       Runtime:removeEventListener("enterFrame", moveComet2)
     end
 
 end --function scene:hide( event )
