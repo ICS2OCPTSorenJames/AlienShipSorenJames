@@ -29,6 +29,16 @@ display.setStatusBar(display.HiddenStatusBar)
 local scene = composer.newScene( splash_screen2 )
 
 ----------------------------------------------------------------------------------------
+-- SOUNDS
+-----------------------------------------------------------------------------------------
+ 
+local backgroundSound = audio.loadSound("Sounds/AppLogoScreen.mp3")
+local backgroundSoundChannel
+
+local CometSound = audio.loadSound( "Sounds/swoosh2.mp3" )
+local CometSoundChannel
+
+----------------------------------------------------------------------------------------
 -- LOCAL VARIABLES
 -----------------------------------------------------------------------------------------
  
@@ -36,20 +46,7 @@ local scene = composer.newScene( splash_screen2 )
 local CompanyLogo
 local Comet
 local Comet2
-
--- global variables
-scrollSpeed = -5
-
-
-----------------------------------------------------------------------------------------
--- SOUNDS
------------------------------------------------------------------------------------------
- 
-local backgroundSound = audio.loadSound("Sounds/AppLogoScreen.mp3")
-local backgroundSoundChannel
-
-local CometSound = audio.loadSound( "Sounds/CometSound.mp3" )
-local CometSoundChannel
+local scrollSpeed = -5
 
 --------------------------------------------------------------------------------------------
 -- LOCAL FUNCTIONS
@@ -106,7 +103,7 @@ function scene:create( event )
     CompanyLogo = display.newImageRect("Images/CompanyLogo.png", 1050, 770)
     
 
-    Comet = display.newImage("Images/Comet.png", 925, 0)
+    Comet = display.newImage("Images/comet.png", 925, 0)
     Comet2 = display.newImage("Images/comet.png", 100, 0)
 
     -- scale the comet
@@ -159,7 +156,7 @@ function scene:show( event )
 
     elseif ( phase == "did" ) then
         --play the sound
-        swooshSoundChannel1 = audio.play(swooshSound1)
+        CometSoundChannel = audio.play(CometSound)
 
         -- Go to the main menu screen after the given time.
         timer.performWithDelay ( 3000, gotoMainMenu)          
@@ -189,7 +186,7 @@ function scene:hide( event )
     -- Called immediately after scene goes off screen.
     elseif ( phase == "did" ) then
         --stop the audio
-       audio.stop(swooshSoundChannel2)
+       audio.stop(CometSoundChannel)
 
     end
 
