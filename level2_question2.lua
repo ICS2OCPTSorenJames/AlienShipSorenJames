@@ -89,7 +89,7 @@ local incorrectSoundChannel
 --create the game over image 
 local function GameOver()
     if (lives == 0) then
-        gameOver = display.newImageRect("Images/youLose.png", display.contentWidth, display.contentHeight)
+        composer.gotoScene( "you_lose" )        
         gameOverSoundChannel = audio.play(gameOverSound)
     end
 end
@@ -130,8 +130,8 @@ end
 local function ResumeGame()
     composer.hideOverlay("crossFade", 400 )
     questionCircle.isVisible = false 
-    RemoveCollisionListenersL3C1()
-    ReplaceCharacterL3Q1()
+    RemoveCollisionListenersL2C1()
+    ReplaceCharacterL2Q1()
 end
 
 
@@ -143,7 +143,7 @@ local function TouchListenerAnswer(touch)
     if (touch.phase == "ended") then
         correctSoundChannel = audio.play(correctSound)
         questionCircle.isVisible = false
-        RemoveCollisionListenersL3C1()
+        RemoveCollisionListenersL2C1()
         UpdateTime()
 
         ResumeGame()
@@ -156,7 +156,7 @@ local function TouchListenerWrongAnswer(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        RemoveCollisionListenersL3C1()
+        RemoveCollisionListenersL2C1()
         lives = lives - 1
         livesText.text = "lives:" .. lives
         UpdateTime()
@@ -172,7 +172,7 @@ local function TouchListenerWrongAnswer2(touch)
         incorrectSoundChannel = audio.play(incorrectSound)
         lives = lives - 1
         livesText.text = "lives:" .. lives
-        RemoveCollisionListenersL3C1()
+        RemoveCollisionListenersL2C1()
         UpdateTime()
 
         ResumeGame()  
@@ -185,7 +185,7 @@ local function TouchListenerWrongAnswer3(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        RemoveCollisionListenersL3C1()
+        RemoveCollisionListenersL2C1()
         UpdateTime()
         lives = lives - 1
         livesText.text = "lives:" .. lives
@@ -219,8 +219,8 @@ local function DisplayQuestion()
     if ( randomOperation == 1 ) then
 
         --creating random numbers
-        firstNumber = math.random (50,100)
-        secondNumber = math.random (50,100)
+        firstNumber = math.random (10,25)
+        secondNumber = math.random (10,25)
 
         -- calculate answer
         answer = firstNumber - secondNumber
@@ -228,7 +228,7 @@ local function DisplayQuestion()
         -- calculate wrong answers
         wrongAnswer1 = answer + math.random(1, 3)
         wrongAnswer2 = answer + math.random(4, 6)
-        wrongAnswer3 = answer + math.random(7, 10)
+        wrongAnswer3 = answer + math.random(7, 8)
 
 
         --creating the question depending on the selcetion number
@@ -247,11 +247,11 @@ local function DisplayQuestion()
 
     elseif ( randomOperation == 2 ) then
         --creating random numbers
-        firstNumber = math.random (0,10)
-        secondNumber = math.random (0,10)
+        firstNumber = math.random (25,35)
+        secondNumber = math.random (1,20)
 
         -- calculate answer
-        answer = firstNumber + secondNumber
+        answer = firstNumber - secondNumber
 
         -- calculate wrong answers
         wrongAnswer1 = answer - math.random(1, 3)
@@ -421,6 +421,7 @@ function scene:create( event )
     sceneGroup:insert(wrongText2)
     sceneGroup:insert(wrongText3)
     sceneGroup:insert( clockText )
+    sceneGroup:insert( livesText )
 
 end --function scene:create( event )
 
@@ -447,7 +448,7 @@ function scene:show( event )
         DisplayQuestion()
         PositionAnswers()
         AddTextListeners()
-        AddCollisionListenersL3C1()
+        AddCollisionListenersL2C1()
     end
 
 end --function scene:show( event )

@@ -58,7 +58,7 @@ local GRAVITY = 8
 local correctText
 local incorrectText
 
-local lives = 3
+local lives = 2
 local livesText
 
 local floor
@@ -117,7 +117,7 @@ end
 --create the game over image 
 local function GameOver()
     if (lives == 0) then
-        gameOver = display.newImageRect("Images/gameOver.png", 2048, 1536)
+        composer.gotoScene( "you_lose" )
         gameOverSoundChannel = audio.play(gameOverSound)
     end
 end
@@ -211,7 +211,7 @@ local function onCollision( self, event )
 end
 
 
-local function ReplaceCharacterL1()
+local function ReplaceCharacterL2()
     character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
     character.x = 100
     character.y = 650
@@ -238,7 +238,7 @@ end
 
 
 
-function ReplaceCharacterL1Q1()
+function ReplaceCharacterL2Q1()
     character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
     character.x = 450
     character.y = 650
@@ -262,7 +262,7 @@ function ReplaceCharacterL1Q1()
     AddRuntimeListeners()
 end
 
-function ReplaceCharacterL1Q2()
+function ReplaceCharacterL2Q2()
     character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
     character.x = 800
     character.y = 650
@@ -351,6 +351,8 @@ local function Lives()
         livesText.isVisible = false
     end
 end
+
+sceneGroup:insert( livesText )
 
 
 
@@ -514,7 +516,7 @@ function scene:show( event )
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
 
-        numLives = 2
+        Lives = 2
         questionsAnswered = 0
 
         -- make all soccer balls visible
@@ -528,7 +530,7 @@ function scene:show( event )
         AddCollisionListenersL2C2()
 
         -- create the character, add physics bodies and runtime listeners
-        ReplaceCharacterL1()
+        ReplaceCharacterL2()
     end
 end --function scene:show( event )
     
@@ -555,7 +557,7 @@ function scene:hide( event )
         -- Called immediately after scene goes off screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
-        ReplaceCharacterL1()
+        ReplaceCharacterL2()
         RemovePhysicsBodies()
         physics.stop()
         RemoveArrowEventListeners()

@@ -89,7 +89,7 @@ local incorrectSoundChannel
 --create the game over image 
 local function GameOver()
     if (lives == 0) then
-        gameOver = display.newImageRect("Images/youLose.png", display.contentWidth, display.contentHeight)
+        composer.gotoScene( "you_lose" )
         gameOverSoundChannel = audio.play(gameOverSound)
     end
 end
@@ -219,16 +219,16 @@ local function DisplayQuestion()
     if ( randomOperation == 1 ) then
 
         --creating random numbers
-        firstNumber = math.random (50,100)
-        secondNumber = math.random (50,100)
+        firstNumber = math.random (10,25)
+        secondNumber = math.random (10,25)
 
         -- calculate answer
-        answer = firstNumber - secondNumber
+        answer = firstNumber + secondNumber
 
         -- calculate wrong answers
         wrongAnswer1 = answer + math.random(1, 3)
         wrongAnswer2 = answer + math.random(4, 6)
-        wrongAnswer3 = answer + math.random(7, 10)
+        wrongAnswer3 = answer + math.random(7, 8)
 
 
         --creating the question depending on the selcetion number
@@ -247,16 +247,16 @@ local function DisplayQuestion()
 
     elseif ( randomOperation == 2 ) then
         --creating random numbers
-        firstNumber = math.random (0,10)
+        firstNumber = math.random (11,20)
         secondNumber = math.random (0,10)
 
         -- calculate answer
-        answer = firstNumber + secondNumber
+        answer = firstNumber - secondNumber
 
         -- calculate wrong answers
-        wrongAnswer1 = answer - math.random(1, 3)
-        wrongAnswer2 = answer - math.random(4, 6)
-        wrongAnswer3 = answer - math.random(7, 10)
+        wrongAnswer1 = answer + math.random(1, 3)
+        wrongAnswer2 = answer + math.random(4, 6)
+        wrongAnswer3 = answer + math.random(7, 10)
 
 
         --creating the question depending on the selcetion number
@@ -421,6 +421,7 @@ function scene:create( event )
     sceneGroup:insert(wrongText2)
     sceneGroup:insert(wrongText3)
     sceneGroup:insert( clockText )
+    sceneGroup:insert( livesText )
 
 end --function scene:create( event )
 
