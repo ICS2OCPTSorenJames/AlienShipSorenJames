@@ -47,7 +47,6 @@ local backButton
 local questionsAnswered = 0
 
 local circle
-local circle2
 
 local character
 
@@ -130,6 +129,12 @@ end
 local function YouWin()
     if (questionsAnswered == 2) then 
         composer.gotoScene( "you_win" )
+    end
+end
+
+local function YouLose()
+    if (lives == 0) then 
+        composer.gotoScene( "you_lose" )
     end
 end
 
@@ -284,15 +289,33 @@ end
 
 function ResumeLevel1()
 
-    -- make character visible again
     character.isVisible = true
-    character.x = 450
+    character.x = 550
     character.y = 650
 
-    livesText.text = "lives:" .. lives
+    livesText.text = "Lives: " .. lives
     AddRuntimeListeners()
     AddArrowEventListeners()
-    
+
+    if (questionsAnswered > 0) then
+        if (circle ~= nil) and (circle.isBodyActive == true) then
+            physics.removeBody(circle)
+            circle.isVisible = false  
+        end
+    end
+end
+
+function ResumeLevel1Q2()
+
+    character.isVisible = true
+    character.x = 750
+    character.y = 650
+
+    livesText.text = "Lives: " .. lives
+    AddRuntimeListeners()
+    AddArrowEventListeners()
+    RemoveCollisionListeners()
+
     if (questionsAnswered > 0) then
         if (circle ~= nil) and (circle.isBodyActive == true) then
             physics.removeBody(circle)
@@ -460,6 +483,7 @@ function scene:show( event )
 
         -- make all soccer balls visible
         --MakeCirclesVisible()
+        GameOver()
 
         -- add physics bodies to each object
         AddPhysicsBodies()
