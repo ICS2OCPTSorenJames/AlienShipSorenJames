@@ -352,7 +352,7 @@ local function Lives()
     end
 end
 
-sceneGroup:insert( livesText )
+
 
 
 

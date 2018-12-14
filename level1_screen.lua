@@ -28,6 +28,12 @@ sceneName = "level1_screen"
 local scene = composer.newScene( sceneName )
 
 -----------------------------------------------------------------------------------------
+-- GLOBAL VARIABLES
+-----------------------------------------------------------------------------------------
+
+lives = 2
+
+-----------------------------------------------------------------------------------------
 -- LOCAL VARIABLES
 -----------------------------------------------------------------------------------------
 
@@ -37,7 +43,9 @@ local background
 local questionCircle
 local questionCircle2
 local backButton
+
 local questionsAnswered = 0
+
 local circle
 local circle2
 
@@ -55,7 +63,7 @@ local GRAVITY = 8
 local correctText
 local incorrectText
 
-local lives = 2
+
 local livesText
 
 local floor
@@ -119,7 +127,7 @@ local function GameOver()
     end
 end
 
-function YouWin()
+local function YouWin()
     if (questionsAnswered == 2) then 
         composer.gotoScene( "you_win" )
     end
@@ -232,58 +240,6 @@ local function ReplaceCharacterL1()
     AddRuntimeListeners()
 end
 
-
-
-
-function ReplaceCharacterL1Q1()
-    character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
-    character.x = 450
-    character.y = 650
-    character.width = 75
-    character.height = 100
-    character.myName = "KickyKat"
-
-    -- intialize horizontal movement of character
-    motionx = 0
-
-    -- add physics body
-    physics.addBody( character, "dynamic", { density=0, friction=0.5, bounce=0, rotation=0 } )
-
-    -- prevent character from being able to tip over
-    character.isFixedRotation = true
-
-    -- add back arrow listeners
-    AddArrowEventListeners()
-
-    -- add back runtime listeners
-    AddRuntimeListeners()
-end
-
-function ReplaceCharacterL1Q2()
-    character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
-    character.x = 800
-    character.y = 650
-    character.width = 75
-    character.height = 100
-    character.myName = "KickyKat"
-
-    -- intialize horizontal movement of character
-    motionx = 0
-
-    -- add physics body
-    physics.addBody( character, "dynamic", { density=0, friction=0.5, bounce=0, rotation=0 } )
-
-    -- prevent character from being able to tip over
-    character.isFixedRotation = true
-
-    -- add back arrow listeners
-    AddArrowEventListeners()
-
-    -- add back runtime listeners
-    AddRuntimeListeners()
-end
-
-
 local function AddPhysicsBodies()
     --add to the physics engine
     physics.addBody (questionCircle, "static", {density=0, friction=0, bounce=0} )
@@ -322,25 +278,26 @@ local function BackTransition( )
 end
 
 
-local function ResumeGame()
+-----------------------------------------------------------------------------------------
+-- GLOBAL FUNCTIONS
+-----------------------------------------------------------------------------------------
+
+function ResumeLevel1()
 
     -- make character visible again
     character.isVisible = true
     character.x = 450
     character.y = 650
+
+    livesText.text = "lives:" .. lives
+    AddRuntimeListeners()
+    AddArrowEventListeners()
     
     if (questionsAnswered > 0) then
         if (circle ~= nil) and (circle.isBodyActive == true) then
             physics.removeBody(circle)
             circle.isVisible = false  
         end
-    end
-end
-
-local function Lives()
-    
-    if (questionsAnswered == 1) then
-        livesText.isVisible = false
     end
 end
 
