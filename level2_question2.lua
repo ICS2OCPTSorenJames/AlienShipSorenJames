@@ -115,7 +115,7 @@ local function TouchListenerAnswer(touch)
     if (touch.phase == "ended") then
         correctSoundChannel = audio.play(correctSound)
         composer.hideOverlay("crossFade", 400 )
-        ResumeLevel2()
+        ResumeLevel2Q2() 
     end 
 end
 
@@ -127,7 +127,7 @@ local function TouchListenerWrongAnswer(touch)
         incorrectSoundChannel = audio.play(incorrectSound)
         lives = lives - 1
         composer.hideOverlay("crossFade", 400 )
-        ResumeLevel2()        
+        ResumeLevel2Q2()        
     end 
 end
 
@@ -139,7 +139,7 @@ local function TouchListenerWrongAnswer2(touch)
         incorrectSoundChannel = audio.play(incorrectSound)
         lives = lives - 1
         composer.hideOverlay("crossFade", 400 )
-        ResumeLevel2()    
+        ResumeLevel2Q2()     
     end 
 end
 
@@ -151,7 +151,7 @@ local function TouchListenerWrongAnswer3(touch)
         incorrectSoundChannel = audio.play(incorrectSound)
         lives = lives - 1
         composer.hideOverlay("crossFade", 400 )
-        ResumeLevel2()   
+        ResumeLevel2Q2()   
     end 
 end
 
