@@ -122,7 +122,7 @@ local function GameOver()
     end
 end
 
-function YouWin()
+local function YouWin()
     if (questionsAnswered == 2) then 
         composer.gotoScene( "you_win" )
     end
@@ -202,7 +202,7 @@ local function onCollision( self, event )
                 character.isVisible = false
 
                 -- show overlay with math question
-                composer.showOverlay( "level2_question2", { isModal = true, effect = "fade", time = 100})
+                composer.showOverlay( "level2_question", { isModal = true, effect = "fade", time = 100})
                 
                 -- Increment questions answered
                 questionsAnswered = questionsAnswered + 1
@@ -262,29 +262,6 @@ function ReplaceCharacterL2Q1()
     AddRuntimeListeners()
 end
 
-function ReplaceCharacterL2Q2()
-    character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
-    character.x = 800
-    character.y = 650
-    character.width = 75
-    character.height = 100
-    character.myName = "KickyKat"
-
-    -- intialize horizontal movement of character
-    motionx = 0
-
-    -- add physics body
-    physics.addBody( character, "dynamic", { density=0, friction=0.5, bounce=0, rotation=0 } )
-
-    -- prevent character from being able to tip over
-    character.isFixedRotation = true
-
-    -- add back arrow listeners
-    AddArrowEventListeners()
-
-    -- add back runtime listeners
-    AddRuntimeListeners()
-end
 
 
 local function AddPhysicsBodies()
@@ -352,7 +329,6 @@ local function Lives()
     end
 end
 
-sceneGroup:insert( livesText )
 
 
 
@@ -516,7 +492,7 @@ function scene:show( event )
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
 
-        Lives = 2
+        lives = 2
         questionsAnswered = 0
 
         -- make all soccer balls visible

@@ -121,7 +121,7 @@ local function StartTimer( event)
     countDownTimer = timer.performWithDelay( 1000, UpdateTime, 0)
 end
 
-function YouWin()
+ local function YouWin()
     if (questionsAnswered == 2) then 
         composer.gotoScene( "you_win" )
     end
