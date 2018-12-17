@@ -293,6 +293,8 @@ function ResumeLevel1()
     character.x = 550
     character.y = 650
 
+    print ("***lives = " .. lives)
+
     livesText.text = "Lives: " .. lives
     AddRuntimeListeners()
     AddArrowEventListeners()
