@@ -10,6 +10,8 @@
 -- INITIALIZATIONS
 -----------------------------------------------------------------------------------------
 
+display.setStatusBar(display.HiddenStatusBar)
+
 -- Use Composer Library
 local composer = require( "composer" )
 
@@ -28,7 +30,6 @@ sceneName = "main_menu"
 -- Creating Scene Object
 local scene = composer.newScene( sceneName )
 
-display.setStatusBar(display.HiddenStatusBar)
 
 -----------------------------------------------------------------------------------------
 -- LOCAL VARIABLES
@@ -66,10 +67,6 @@ end
 local function InstructionsTransition( )
     composer.gotoScene( "instructions_screen", {effect = "fromLeft", time = 1000})
 end 
-
-local function Mute()
-    audio.stop()
-end
 
 
 -----------------------------------------------------------------------------------------
@@ -192,9 +189,6 @@ function scene:show( event )
     -- Creating a group that associates objects with the scene
     local sceneGroup = self.view
 
-    --play the background music
-    bkgMusicChannel = audio.play(bkgMusic)
-
     -----------------------------------------------------------------------------------------
 
     local phase = event.phase
@@ -210,7 +204,8 @@ function scene:show( event )
     -- Insert code here to make the scene come alive.
     -- Example: start timers, begin animation, play audio, etc.
     elseif ( phase == "did" ) then       
-        
+        --play the background music
+        bkgMusicChannel = audio.play(bkgMusic)
 
     end
 
@@ -239,6 +234,7 @@ function scene:hide( event )
 
     elseif ( phase == "did" ) then
         -- Called immediately after scene goes off screen.
+        audio.stop (bkgMusicChannel)
     end
 
 end -- function scene:hide( event )

@@ -34,7 +34,6 @@ local scene = composer.newScene( sceneName )
 -- The local variables for this scene
 local questionText
 
-local randomOperation
 local firstNumber
 local secondNumber
 
@@ -64,11 +63,8 @@ local totalSeconds = 20
 local secondsLeft = 20
 local clockText
 local countDownTimer
-local questionsAnswered = 0
 
 local circle
-local lives = 2
-local livesText
 
 -----------------------------------------------------------------------------------------
 --SOUNDS
@@ -86,15 +82,6 @@ local incorrectSoundChannel
 --LOCAL FUNCTIONS
 -----------------------------------------------------------------------------------------
 
---create the game over image 
-local function GameOver()
-    if (lives == 0) then
-        composer.gotoScene( "you_lose" )
-        gameOverSoundChannel = audio.play(gameOverSound)
-    end
-end
-
-
 --this function counts down the time
 local function UpdateTime()
 
@@ -109,31 +96,16 @@ local function UpdateTime()
         secondsLeft = totalSeconds
         -- decrease life
         lives = lives - 1 
-        livesText.text = "lives:" .. lives
         -- call game over or ask another question
         GameOver()
     end       
 end
 
 --function that calls the timer
-local function StartTimer( event)
+local function StartTimer()
     --create a countdown timer that loops infintely
     countDownTimer = timer.performWithDelay( 1000, UpdateTime, 0)
 end
-
- local function YouWin()
-    if (questionsAnswered == 2) then 
-        composer.gotoScene( "you_win" )
-    end
-end
-
-local function ResumeGame()
-    composer.hideOverlay("crossFade", 400 )
-    questionCircle.isVisible = false 
-    RemoveCollisionListenersL2C1()
-    ReplaceCharacterL2Q1()
-end
-
 
 -----------------------------------------------------------------------------------------
 --checking to see if the user pressed the right answer and bring them back to level 1
@@ -142,11 +114,8 @@ local function TouchListenerAnswer(touch)
     
     if (touch.phase == "ended") then
         correctSoundChannel = audio.play(correctSound)
-        questionCircle.isVisible = false
-        RemoveCollisionListenersL2C1()
-        UpdateTime()
-
-        ResumeGame()
+        composer.hideOverlay("crossFade", 400 )
+        ResumeLevel2()
     end 
 end
 
@@ -156,11 +125,9 @@ local function TouchListenerWrongAnswer(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        RemoveCollisionListenersL2C1()
         lives = lives - 1
-        livesText.text = "lives:" .. lives
-        UpdateTime()
-        ResumeGame()        
+        composer.hideOverlay("crossFade", 400 )
+        ResumeLevel2()        
     end 
 end
 
@@ -171,11 +138,8 @@ local function TouchListenerWrongAnswer2(touch)
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
         lives = lives - 1
-        livesText.text = "lives:" .. lives
-        RemoveCollisionListenersL2C1()
-        UpdateTime()
-
-        ResumeGame()  
+        composer.hideOverlay("crossFade", 400 )
+        ResumeLevel2()    
     end 
 end
 
@@ -185,16 +149,11 @@ local function TouchListenerWrongAnswer3(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        RemoveCollisionListenersL2C1()
-        UpdateTime()
         lives = lives - 1
-        livesText.text = "lives:" .. lives
-
-        ResumeGame() 
+        composer.hideOverlay("crossFade", 400 )
+        ResumeLevel2()   
     end 
 end
-
-
 
 
 --adding the event listeners 
@@ -214,65 +173,29 @@ local function RemoveTextListeners()
 end
 
 local function DisplayQuestion()
-    randomOperation = math.random (1,2)
+    --creating random numbers
+    firstNumber = math.random (0,15)
+    secondNumber = math.random (0,15)
 
-    if ( randomOperation == 1 ) then
+    -- calculate answer
+    answer = firstNumber + secondNumber
 
-        --creating random numbers
-        firstNumber = math.random (10,25)
-        secondNumber = math.random (10,25)
-
-        -- calculate answer
-        answer = firstNumber + secondNumber
-
-        -- calculate wrong answers
-        wrongAnswer1 = answer + math.random(1, 3)
-        wrongAnswer2 = answer + math.random(4, 6)
-        wrongAnswer3 = answer + math.random(7, 8)
+    -- calculate wrong answers
+    wrongAnswer1 = answer + math.random(1, 3)
+    wrongAnswer2 = answer + math.random(4, 6)
+    wrongAnswer3 = answer + math.random(7, 10)
 
 
-        --creating the question depending on the selcetion number
-        questionText.text = firstNumber .. " + " .. secondNumber .. " ="
+    --creating the question depending on the selcetion number
+    questionText.text = firstNumber .. " + " .. secondNumber .. " ="
 
-        --creating answer text from list it corispondes with the animals list
-        answerText.text = answer
+    --creating answer text from list it corispondes with the animals list
+    answerText.text = answer
     
-        --creating wrong answers
-        wrongText1.text = wrongAnswer1
-        wrongText2.text = wrongAnswer2
-        wrongText3.text = wrongAnswer3
-
-        --start the timer
-        StartTimer()
-
-    elseif ( randomOperation == 2 ) then
-        --creating random numbers
-        firstNumber = math.random (11,20)
-        secondNumber = math.random (0,10)
-
-        -- calculate answer
-        answer = firstNumber - secondNumber
-
-        -- calculate wrong answers
-        wrongAnswer1 = answer + math.random(1, 3)
-        wrongAnswer2 = answer + math.random(4, 6)
-        wrongAnswer3 = answer + math.random(7, 10)
-
-
-        --creating the question depending on the selcetion number
-        questionText.text = firstNumber .. " - " .. secondNumber .. " ="
-
-        --creating answer text from list it corispondes with the animals list
-        answerText.text = answer
-    
-        --creating wrong answers
-        wrongText1.text = wrongAnswer1
-        wrongText2.text = wrongAnswer2
-        wrongText3.text = wrongAnswer3
-
-        --start the timer
-        StartTimer()
-    end
+    --creating wrong answers
+    wrongText1.text = wrongAnswer1
+    wrongText2.text = wrongAnswer2
+    wrongText3.text = wrongAnswer3
 end
 
 local function PositionAnswers()
@@ -381,35 +304,6 @@ function scene:create( event )
     clockText = display.newText ("Time: \n"  ..  secondsLeft, 500, 450, nil, 50)
     clockText:setTextColor(168/255, 13/255, 13/255)
 
-    --insert the circle
-    circle = display.newImageRect("Images/circle.png", 100, 100)
-    circle.x = 350
-    circle.y = display.contentHeight * 2.08
-    circle.isVisible = false
-
-
-    questionCircle = display.newImageRect("Images/circle.png", 100, 100)
-    questionCircle.x = 350
-    questionCircle.y = 650
-    questionCircle.myName = "questionCircle"
-    questionCircle:toBack()
-    sceneGroup:insert( questionCircle )
-    
-    
-
-    questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
-    questionCircle2.x = 650
-    questionCircle2.y = 650
-    questionCircle2.myName = "questionCircle2"
-    questionCircle2:toBack()
-    sceneGroup:insert( questionCircle2 )
-
-
-    livesText = display.newText("lives:" .. lives, 100, 100, nil, 50)
-    livesText:setTextColor(1, 1, 1)
-    livesText.x = 100
-    livesText.y = 60
-
     -----------------------------------------------------------------------------------------
 
     -- insert all objects for this scene into the scene group
@@ -421,8 +315,6 @@ function scene:create( event )
     sceneGroup:insert(wrongText2)
     sceneGroup:insert(wrongText3)
     sceneGroup:insert( clockText )
-    sceneGroup:insert( livesText )
-
 end --function scene:create( event )
 
 -----------------------------------------------------------------------------------------
@@ -448,7 +340,7 @@ function scene:show( event )
         DisplayQuestion()
         PositionAnswers()
         AddTextListeners()
-        AddCollisionListenersL2C1()
+        StartTimer()        
     end
 
 end --function scene:show( event )
@@ -474,6 +366,7 @@ function scene:hide( event )
     elseif ( phase == "did" ) then
         -- Called immediately after scene goes off screen.
         RemoveTextListeners()
+        timer.cancel(countDownTimer)
     end
 
 end --function scene:hide( event )

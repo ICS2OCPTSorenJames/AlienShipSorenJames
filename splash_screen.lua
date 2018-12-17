@@ -76,11 +76,11 @@ function scene:create( event )
     local background = display.newImageRect("Images/background.jfif", 2048, 1536)
 
 
-    FlossBoss = display.newImageRect("Images/companyLogoSoren.png", 600, 600)
-    FlossBoss2 = display.newImageRect("Images/companyLogoGlow.png", 600, 600)
+    FlossBoss = display.newImageRect("Images/CompanyLogoSoren.png", 600, 600)
+    FlossBoss2 = display.newImageRect("Images/CompanyLogoGlow.png", 600, 600)
     
-    comet1 = display.newImageRect("Images/Comet.png", 150, 150)
-    comet2 = display.newImageRect("Images/Comet.png", 150, 150)
+    comet1 = display.newImageRect("Images/comet.png", 150, 150)
+    comet2 = display.newImageRect("Images/comet.png", 150, 150)
 
     -- set the initial x and y position of the flossBosses
     comet1.x = 0

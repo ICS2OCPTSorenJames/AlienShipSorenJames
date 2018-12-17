@@ -1,8 +1,7 @@
 -----------------------------------------------------------------------------------------
 --
 -- level1_screen.lua
--- Created by: Allison
--- Date: May 16, 2017
+-- Created by: Soren Drew
 -- Description: This is the level 1 screen of the game. the charater can be dragged to move
 --If character goes off a certain araea they go back to the start. When a user interactes
 --with piant a trivia question will come up. they will have a limided time to click on the answer
@@ -21,7 +20,7 @@ local physics = require( "physics")
 -----------------------------------------------------------------------------------------
 
 -- Naming Scene
-sceneName = "level3_question2"
+sceneName = "level2_question"
 
 -----------------------------------------------------------------------------------------
 
@@ -64,14 +63,8 @@ local totalSeconds = 20
 local secondsLeft = 20
 local clockText
 local countDownTimer
-local questionsAnswered = 0
 
 local circle
-local heart1
-local heart2
-local heart3
-local lives = 3
-local livesText
 
 -----------------------------------------------------------------------------------------
 --SOUNDS
@@ -89,16 +82,6 @@ local incorrectSoundChannel
 --LOCAL FUNCTIONS
 -----------------------------------------------------------------------------------------
 
---create the game over image 
-local function GameOver()
-    if (lives == 0) then
-        gameOver = display.newImageRect("Images/youLose.png", display.contentWidth, display.contentHeight)
-        gameOverSoundChannel = audio.play(gameOverSound)
-    end
-end
-
-
-
 --this function counts down the time
 local function UpdateTime()
 
@@ -109,45 +92,19 @@ local function UpdateTime()
     clockText.text = "Time: \n"  ..    secondsLeft
 
     if (secondsLeft == 0 ) then
-
         --reset the number of seconds left
         secondsLeft = totalSeconds
         -- decrease life
-        lives = lives - 1
-        livesText.text = "lives:" .. lives
+        lives = lives - 1 
         -- call game over or ask another question
         GameOver()
     end       
 end
 
 --function that calls the timer
-local function StartTimer(event)
+local function StartTimer()
     --create a countdown timer that loops infintely
     countDownTimer = timer.performWithDelay( 1000, UpdateTime, 0)
-end
-
-function YouWin()
-    if (questionsAnswered == 2) then 
-        composer.gotoScene( "YouWin" )
-    end
-end
-
-local function ResumeGame2()
-    composer.hideOverlay("crossFade", 400)
-    RemoveCollisionListenersL3C1()
-    RemoveCollisionListenersL3C2()
-    ReplaceCharacterL3Q2()
-    AddArrowEventListeners()
-end
-
-local function Lives()
-    livesText = display.newText("lives:" .. lives, 100, 100, nil, 50)
-    livesText:setTextColor(1, 1, 1)
-    livesText.x = 100
-    livesText.y = 60
-    if (questionsAnswered == 1) then
-        livesText.isVisible = false
-    end
 end
 
 -----------------------------------------------------------------------------------------
@@ -157,11 +114,8 @@ local function TouchListenerAnswer(touch)
     
     if (touch.phase == "ended") then
         correctSoundChannel = audio.play(correctSound)
-        RemoveCollisionListenersL3C2()
-        questionsAnswered = questionsAnswered + 1
-        UpdateTime()
-
-        ResumeGame2()  
+        composer.hideOverlay("crossFade", 400 )
+        ResumeLevel2Q2() 
     end 
 end
 
@@ -171,13 +125,9 @@ local function TouchListenerWrongAnswer(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        RemoveCollisionListenersL3C2()
-        questionsAnswered = questionsAnswered + 1
         lives = lives - 1
-        livesText.text = "lives:" .. lives
-        UpdateTime()
-        
-        ResumeGame2()
+        composer.hideOverlay("crossFade", 400 )
+        ResumeLevel2Q2()        
     end 
 end
 
@@ -187,13 +137,9 @@ local function TouchListenerWrongAnswer2(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        RemoveCollisionListenersL3C2()
-        questionsAnswered = questionsAnswered + 1
         lives = lives - 1
-        livesText.text = "lives:" .. lives
-        UpdateTime()
-
-        ResumeGame2()
+        composer.hideOverlay("crossFade", 400 )
+        ResumeLevel2Q2()     
     end 
 end
 
@@ -203,13 +149,9 @@ local function TouchListenerWrongAnswer3(touch)
     
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
-        RemoveCollisionListenersL3C2()
-        questionsAnswered = questionsAnswered + 1
         lives = lives - 1
-        livesText.text = "lives:" .. lives
-        UpdateTime()
-
-        ResumeGame2()
+        composer.hideOverlay("crossFade", 400 )
+        ResumeLevel2Q2()   
     end 
 end
 
@@ -231,64 +173,29 @@ local function RemoveTextListeners()
 end
 
 local function DisplayQuestion()
-    randomOperation = math.random (1,2)
+    --creating random numbers
+    firstNumber = math.random (0,15)
+    secondNumber = math.random (0,15)
 
-    if ( randomOperation == 1 ) then
-        --creating random numbers
-        firstNumber = math.random (0,15)
-        secondNumber = math.random (0,15)
+    -- calculate answer
+    answer = firstNumber + secondNumber
 
-        -- calculate answer
-        answer = firstNumber + secondNumber
-
-        -- calculate wrong answers
-        wrongAnswer1 = answer + math.random(1, 3)
-        wrongAnswer2 = answer + math.random(4, 6)
-        wrongAnswer3 = answer + math.random(7, 10)
+    -- calculate wrong answers
+    wrongAnswer1 = answer + math.random(1, 3)
+    wrongAnswer2 = answer + math.random(4, 6)
+    wrongAnswer3 = answer + math.random(7, 10)
 
 
-        --creating the question depending on the selcetion number
-        questionText.text = firstNumber .. " + " .. secondNumber .. " ="
+    --creating the question depending on the selcetion number
+    questionText.text = firstNumber .. " + " .. secondNumber .. " ="
 
-        --creating answer text from list it corispondes with the animals list
-        answerText.text = answer
+    --creating answer text from list it corispondes with the animals list
+    answerText.text = answer
     
-        --creating wrong answers
-        wrongText1.text = wrongAnswer1
-        wrongText2.text = wrongAnswer2
-        wrongText3.text = wrongAnswer3
-
-        --start the timer
-        StartTimer()
-
-    elseif (randomOperation == 2 ) then
-        --creating random numbers
-        firstNumber = math.random (0,10)
-        secondNumber = math.random (0,10)
-
-        -- calculate answer
-        answer = firstNumber - secondNumber
-
-        -- calculate wrong answers
-        wrongAnswer1 = answer - math.random(1, 3)
-        wrongAnswer2 = answer - math.random(4, 6)
-        wrongAnswer3 = answer - math.random(7, 10)
-
-
-        --creating the question depending on the selcetion number
-        questionText.text = firstNumber .. " - " .. secondNumber .. " ="
-
-        --creating answer text from list it corispondes with the animals list
-        answerText.text = answer
-    
-        --creating wrong answers
-        wrongText1.text = wrongAnswer1
-        wrongText2.text = wrongAnswer2
-        wrongText3.text = wrongAnswer3
-
-        --start the timer
-        StartTimer()
-
+    --creating wrong answers
+    wrongText1.text = wrongAnswer1
+    wrongText2.text = wrongAnswer2
+    wrongText3.text = wrongAnswer3
 end
 
 local function PositionAnswers()
@@ -389,7 +296,7 @@ function scene:create( event )
 
     wrongText2 = display.newText("", X1, Y1, Arial, 75)
     wrongText2.anchorX = 0
-    
+
     wrongText3 = display.newText("", X2, Y1, Arial, 75)
     wrongText3.anchorX = 0
 
@@ -397,31 +304,6 @@ function scene:create( event )
     clockText = display.newText ("Time: \n"  ..  secondsLeft, 500, 450, nil, 50)
     clockText:setTextColor(168/255, 13/255, 13/255)
 
-    --insert the circle
-    circle = display.newImageRect("Images/circle.png", 100, 100)
-    circle.x = 350
-    circle.y = display.contentHeight * 2.08
-    circle.isVisible = false
-
-
-    questionCircle = display.newImageRect("Images/circle.png", 100, 100)
-    questionCircle.x = 350
-    questionCircle.y = 650
-    questionCircle.myName = "questionCircle"
-    questionCircle:toBack()
-    sceneGroup:insert( questionCircle )
-
-    
-    questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
-    questionCircle2.x = 650
-    questionCircle2.y = 650
-    questionCircle2.myName = "questionCircle2"
-    questionCircle2:toBack()
-    sceneGroup:insert( questionCircle2 )
-
-    
-
-    
     -----------------------------------------------------------------------------------------
 
     -- insert all objects for this scene into the scene group
@@ -433,8 +315,6 @@ function scene:create( event )
     sceneGroup:insert(wrongText2)
     sceneGroup:insert(wrongText3)
     sceneGroup:insert( clockText )
-    
-
 end --function scene:create( event )
 
 -----------------------------------------------------------------------------------------
@@ -460,9 +340,9 @@ function scene:show( event )
         DisplayQuestion()
         PositionAnswers()
         AddTextListeners()
-        AddCollisionListenersL3C2()
-        Lives()
+        StartTimer()        
     end
+
 end --function scene:show( event )
 
 -----------------------------------------------------------------------------------------
@@ -486,6 +366,7 @@ function scene:hide( event )
     elseif ( phase == "did" ) then
         -- Called immediately after scene goes off screen.
         RemoveTextListeners()
+        timer.cancel(countDownTimer)
     end
 
 end --function scene:hide( event )
