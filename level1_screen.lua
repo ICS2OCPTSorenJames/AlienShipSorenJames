@@ -33,6 +33,8 @@ local scene = composer.newScene( sceneName )
 
 lives = 2
 
+questionsAnswered = 0
+
 -----------------------------------------------------------------------------------------
 -- LOCAL VARIABLES
 -----------------------------------------------------------------------------------------
@@ -43,8 +45,6 @@ local background
 local questionCircle
 local questionCircle2
 local backButton
-
-local questionsAnswered = 0
 
 local circle
 
@@ -68,6 +68,7 @@ local livesText
 local floor
 local ceiling
 local rWall
+local lWall
 
 -----------------------------------------------------------------------------------------
 -- SOUNDS
@@ -212,7 +213,7 @@ local function onCollision( self, event )
             character.isVisible = false
 
             -- show overlay with math question
-            composer.showOverlay( "level1_question", { isModal = true, effect = "fade", time = 100})
+            composer.showOverlay( "level1_question2", { isModal = true, effect = "fade", time = 100})
                 
             -- Increment questions answered
             questionsAnswered = questionsAnswered + 1
@@ -222,11 +223,11 @@ end
 
 
 local function ReplaceCharacterL1()
-    character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
+    character = display.newImageRect("Images/Character1.png", 100, 150)
     character.x = 100
     character.y = 650
-    character.width = 75
-    character.height = 100
+    character.width = 150
+    character.height = 150
     character.myName = "KickyKat"
 
     -- intialize horizontal movement of character
@@ -252,6 +253,7 @@ local function AddPhysicsBodies()
     physics.addBody(floor, "static", {density=1, friction=0.3, bounce=0.2} )
     physics.addBody(ceiling, "static", {friction=0.5, bounce=0.3})
     physics.addBody(rWall, "static", {friction=0.5, bounce=0.3})
+    physics.addBody(lWall, "static", {friction=0.5, bounce=0.3})
 end
 
 local function RemovePhysicsBodies()
@@ -260,6 +262,7 @@ local function RemovePhysicsBodies()
     physics.removeBody(floor)
     physics.removeBody(ceiling)
     physics.removeBody(rWall)
+    physics.removeBody(lWall)
 end
 
 --add collision to the first circle
@@ -290,10 +293,8 @@ end
 function ResumeLevel1()
 
     character.isVisible = true
-    character.x = 550
+    character.x = 510
     character.y = 650
-
-    print ("***lives = " .. lives)
 
     livesText.text = "Lives: " .. lives
     AddRuntimeListeners()
@@ -310,7 +311,7 @@ end
 function ResumeLevel1Q2()
 
     character.isVisible = true
-    character.x = 750
+    character.x = 760
     character.y = 650
 
     livesText.text = "Lives: " .. lives
@@ -365,11 +366,11 @@ function scene:create( event )
 
     sceneGroup:insert( backButton )
 
-    character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
+    character = display.newImageRect("Images/Character1.png", 100, 150)
     character.x = 655
     character.y = 650
-    character.width = 75
-    character.height = 100
+    character.width = 150
+    character.height = 150
     character.myName = "KickyKat"
     character.isVisible = false
 
@@ -430,6 +431,15 @@ function scene:create( event )
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( rWall )
+
+    --Insert the right wall
+    lWall = display.newImageRect("Images/Rwall.png", 100, 1024)
+    lWall.x = 10
+    lWall.y = display.contentCenterY
+    lWall.isVisible = false
+
+    -- Insert objects into the scene group in order to ONLY be associated with this scene
+    sceneGroup:insert( lWall )
 
     --create the circle
     questionCircle = display.newImageRect("Images/circle.png", 100, 100)
@@ -495,6 +505,8 @@ function scene:show( event )
 
         -- create the character, add physics bodies and runtime listeners
         ReplaceCharacterL1()
+        YouWin()
+        YouLose()
     end
 end --function scene:show( event )
     

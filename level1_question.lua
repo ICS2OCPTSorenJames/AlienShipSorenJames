@@ -82,6 +82,16 @@ local incorrectSoundChannel
 --LOCAL FUNCTIONS
 -----------------------------------------------------------------------------------------
 
+
+--create the game over image 
+local function GameOver()
+    if (lives == 0) then
+        gameOver = display.newImageRect("Images/gameOver.png", 2048, 1536)
+        gameOverSoundChannel = audio.play(gameOverSound)
+    end
+end
+
+
 --this function counts down the time
 local function UpdateTime()
 
@@ -115,6 +125,7 @@ local function TouchListenerAnswer(touch)
     if (touch.phase == "ended") then
         correctSoundChannel = audio.play(correctSound)
         composer.hideOverlay("crossFade", 400 )
+        questionsAnswered = questionsAnswered + 1
         ResumeLevel1()
     end 
 end
@@ -126,6 +137,7 @@ local function TouchListenerWrongAnswer(touch)
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
         lives = lives - 1
+        questionsAnswered = questionsAnswered + 1
         composer.hideOverlay("crossFade", 400 )
         ResumeLevel1()        
     end 
@@ -138,6 +150,7 @@ local function TouchListenerWrongAnswer2(touch)
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
         lives = lives - 1
+        questionsAnswered = questionsAnswered + 1
         composer.hideOverlay("crossFade", 400 )
         ResumeLevel1()    
     end 
@@ -150,6 +163,7 @@ local function TouchListenerWrongAnswer3(touch)
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
         lives = lives - 1
+        questionsAnswered = questionsAnswered + 1
         composer.hideOverlay("crossFade", 400 )
         ResumeLevel1()   
     end 

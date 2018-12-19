@@ -20,7 +20,7 @@ local physics = require("physics")
 -----------------------------------------------------------------------------------------
 
 -- Naming Scene
-sceneName = "level1_screen"
+sceneName = "level3_screen"
 
 -----------------------------------------------------------------------------------------
 
@@ -28,11 +28,16 @@ sceneName = "level1_screen"
 local scene = composer.newScene( sceneName )
 
 -----------------------------------------------------------------------------------------
--- LOCAL VARIABLES
+-- GLOBAL VARIABLES
 -----------------------------------------------------------------------------------------
 
---start physics
-physics.start()
+lives = 2
+
+questionsAnswered = 0
+
+-----------------------------------------------------------------------------------------
+-- LOCAL VARIABLES
+-----------------------------------------------------------------------------------------
 
 --the local variables for this scene
 local background
@@ -40,11 +45,10 @@ local background
 local questionCircle
 local questionCircle2
 local backButton
-local questionsAnswered = 0
-local circle
-local circle2
 
-local chracter
+local circle
+
+local character
 
 local rArrow 
 local uArrow
@@ -58,12 +62,13 @@ local GRAVITY = 8
 local correctText
 local incorrectText
 
-local lives = 3
+
 local livesText
 
 local floor
 local ceiling
 local rWall
+local lWall
 
 -----------------------------------------------------------------------------------------
 -- SOUNDS
@@ -75,7 +80,6 @@ local gameOverSoundChannel
 -----------------------------------------------------------------------------------------
 -- LOCAL FUNCTIONS
 -----------------------------------------------------------------------------------------
-
 
 -- When right arrow is touched, move character right
 local function right (touch)
@@ -100,6 +104,7 @@ end
 local function movePlayer (event)
     character.x = character.x + motionx
 end
+
  
 -- Stop character movement when no arrow is pushed
 local function stop (event)
@@ -117,17 +122,22 @@ end
 --create the game over image 
 local function GameOver()
     if (lives == 0) then
-        gameOver = display.newImageRect("Images/youLose.png", 2048, 1536)
+        gameOver = display.newImageRect("Images/gameOver.png", 2048, 1536)
         gameOverSoundChannel = audio.play(gameOverSound)
     end
 end
 
-function YouWin()
+local function YouWin()
     if (questionsAnswered == 2) then 
         composer.gotoScene( "you_win" )
     end
 end
 
+local function YouLose()
+    if (lives == 0) then 
+        composer.gotoScene( "you_lose" )
+    end
+end
 
 
 function AddArrowEventListeners()
@@ -187,38 +197,37 @@ local function onCollision( self, event )
             -- Increment questions answered
             questionsAnswered = questionsAnswered + 1
 
-            elseif (event.target.myName == "questionCircle2") then
+        elseif (event.target.myName == "questionCircle2") then
 
-                -- remove runtime listeners that move the character
-                RemoveArrowEventListeners()
-                RemoveRuntimeListeners()
+            -- remove runtime listeners that move the character
+            RemoveArrowEventListeners()
+            RemoveRuntimeListeners()
 
                 -- remove the character from the display
                 --display.remove(character)
 
-                -- stop the character from moving
-                motionx = 0
+            -- stop the character from moving
+            motionx = 0
 
-                -- make the character invisible
-                character.isVisible = false
+            -- make the character invisible
+            character.isVisible = false
 
-                -- show overlay with math question
-                composer.showOverlay( "level3_question2", { isModal = true, effect = "fade", time = 100})
+            -- show overlay with math question
+            composer.showOverlay( "level3_question", { isModal = true, effect = "fade", time = 100})
                 
-                -- Increment questions answered
-                questionsAnswered = questionsAnswered + 1
+            -- Increment questions answered
+            questionsAnswered = questionsAnswered + 1
         end
     end
 end
 
 
-
-function ReplaceCharacterL1()
-    character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
+local function ReplaceCharacterL3()
+    character = display.newImageRect("Images/Character1.png", 100, 150)
     character.x = 100
     character.y = 650
-    character.width = 75
-    character.height = 100
+    character.width = 150
+    character.height = 150
     character.myName = "KickyKat"
 
     -- intialize horizontal movement of character
@@ -236,89 +245,38 @@ function ReplaceCharacterL1()
     -- add back runtime listeners
     AddRuntimeListeners()
 end
-
-function ReplaceCharacterL3Q1()
-    character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
-    character.x = 450
-    character.y = 650
-    character.width = 75
-    character.height = 100
-    character.myName = "KickyKat"
-
-    -- intialize horizontal movement of character
-    motionx = 0
-
-    -- add physics body
-    physics.addBody( character, "dynamic", { density=0, friction=0.5, bounce=0, rotation=0 } )
-
-    -- prevent character from being able to tip over
-    character.isFixedRotation = true
-
-    -- add back arrow listeners
-    AddArrowEventListeners()
-
-    -- add back runtime listeners
-    AddRuntimeListeners()
-end
-
-function ReplaceCharacterL3Q2()
-    character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
-    character.x = 800
-    character.y = 650
-    character.width = 75
-    character.height = 100
-    character.myName = "KickyKat"
-
-    -- intialize horizontal movement of character
-    motionx = 0
-
-    -- add physics body
-    physics.addBody( character, "dynamic", { density=0, friction=0.5, bounce=0, rotation=0 } )
-
-    -- prevent character from being able to tip over
-    character.isFixedRotation = true
-
-    -- add back arrow listeners
-    AddArrowEventListeners()
-
-    -- add back runtime listeners
-    AddRuntimeListeners()
-end
-
-
-
 
 local function AddPhysicsBodies()
     --add to the physics engine
     physics.addBody (questionCircle, "static", {density=0, friction=0, bounce=0} )
     physics.addBody (questionCircle2, "static", {density=0, friction=0, bounce=0} )
     physics.addBody(floor, "static", {density=1, friction=0.3, bounce=0.2} )
+    physics.addBody(ceiling, "static", {friction=0.5, bounce=0.3})
+    physics.addBody(rWall, "static", {friction=0.5, bounce=0.3})
+    physics.addBody(lWall, "static", {friction=0.5, bounce=0.3})
 end
 
 local function RemovePhysicsBodies()
+    --physics.removeBody(questionCircle)
+    --physics.removeBody(questionCircle2)
     physics.removeBody(floor)
+    physics.removeBody(ceiling)
+    physics.removeBody(rWall)
+    physics.removeBody(lWall)
 end
 
 --add collision to the first circle
-function AddCollisionListenersL3C1()
-	--if they hit the circle on collision will be called
-	questionCircle.collision = onCollision
+function AddCollisionListeners()
+    --if they hit the circle on collision will be called
+    questionCircle.collision = onCollision
     questionCircle:addEventListener( "collision" )
-end
-
---add collision to the second circle
-function AddCollisionListenersL3C2()
     questionCircle2.collision = onCollision
     questionCircle2:addEventListener( "collision" )
 end
 
 --remove collision to the first circle
-function RemoveCollisionListenersL3C1()
-	questionCircle:removeEventListener( "collision" )
-end
-
---remove collision to the second circle
-function RemoveCollisionListenersL3C2()
+function RemoveCollisionListeners()
+    questionCircle:removeEventListener( "collision" )
     questionCircle2:removeEventListener( "collision" )
 end
 
@@ -328,13 +286,21 @@ local function BackTransition( )
 end
 
 
-local function ResumeGame()
+-----------------------------------------------------------------------------------------
+-- GLOBAL FUNCTIONS
+-----------------------------------------------------------------------------------------
 
-    -- make character visible again
+function ResumeLevel3()
+
     character.isVisible = true
-    character.x = 450
-    character.y = 650
+    if (questionsAnswered == 2) then
+        RemoveCollisionListeners()
+    end
     
+    livesText.text = "Lives: " .. lives
+    AddRuntimeListeners()
+    AddArrowEventListeners()
+
     if (questionsAnswered > 0) then
         if (circle ~= nil) and (circle.isBodyActive == true) then
             physics.removeBody(circle)
@@ -343,17 +309,24 @@ local function ResumeGame()
     end
 end
 
-local function Lives()
-    livesText = display.newText("lives:" .. lives, 100, 100, nil, 50)
-    livesText:setTextColor(1, 1, 1)
-    livesText.x = 100
-    livesText.y = 60
-    if (questionsAnswered == 1) then
-        livesText.isVisible = false
+--[[function ResumeLevel1Q2()
+
+    character.isVisible = true
+    character.x = 760
+    character.y = 650
+
+    livesText.text = "Lives: " .. lives
+    AddRuntimeListeners()
+    AddArrowEventListeners()
+    RemoveCollisionListeners()
+
+    if (questionsAnswered > 0) then
+        if (circle ~= nil) and (circle.isBodyActive == true) then
+            physics.removeBody(circle)
+            circle.isVisible = false  
+        end
     end
-end
-
-
+end]]
 
 -----------------------------------------------------------------------------------------
 -- GLOBAL SCENE FUNCTIONS
@@ -362,8 +335,16 @@ end
 --this fuction is called when the scene doesn't exist
 function scene:create( event )
 
-	-- Creating a group that associates objects with the scene
-    local sceneGroup = self.view
+
+    -- Creating a group that associates objects with the scene
+    local sceneGroup = self.view    
+
+    -- Insert the background image
+    background = display.newImageRect("Images/Level1Screen.png", display.contentWidth, display.contentHeight)
+    background.x = display.contentWidth / 2 
+    background.y = display.contentHeight / 2   
+
+    sceneGroup:insert( background )
 
     --create the back button
     backButton = widget.newButton( 
@@ -378,21 +359,15 @@ function scene:create( event )
             defaultFile = "Images/backButtonUnpressed.png",
             overFile = "Images/backButtonPressed.png",
 
+            motionx = 0,
+
             -- When the button is released, call the Level1 screen transition function
             onRelease = BackTransition       
         } )
 
     sceneGroup:insert( backButton )
 
-    -- Insert the background image
-    background = display.newImageRect("Images/Level1Screen.png", display.contentWidth, display.contentHeight)
-    background.x = display.contentWidth / 2 
-    background.y = display.contentHeight / 2
-    background:toBack()
-
-    sceneGroup:insert( background )
-
-    character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
+    character = display.newImageRect("Images/Character1.png", 100, 150)
     character.x = 655
     character.y = 650
     character.width = 75
@@ -400,8 +375,13 @@ function scene:create( event )
     character.myName = "KickyKat"
     character.isVisible = false
 
-    sceneGroup:insert( character )
+    sceneGroup:insert( character ) 
 
+    livesText = display.newText("Lives: " .. lives, 100, 100, nil, 50)
+    livesText:setTextColor(1, 1, 1)
+    livesText.x = 100
+    livesText.y = 60
+    sceneGroup:insert( livesText ) 
 
     --Insert the right arrow
     rArrow = display.newImageRect("Images/RightArrowUnpressed.png", 100, 50)
@@ -431,8 +411,6 @@ function scene:create( event )
     floor = display.newImageRect("Images/Level-1Floor.png", 1024, 100)
     floor.x = display.contentCenterX
     floor.y = 750
-    physics.addBody(floor, "static", {friction=0.5, bounce=0.3})
-    floor:toBack()
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( floor )
@@ -440,9 +418,7 @@ function scene:create( event )
     --Insert the ceiling
     ceiling = display.newImageRect("Images/Level-1Floor.png", 1024, 100)
     ceiling.x = display.contentCenterX
-    ceiling.y = 5
-    physics.addBody(ceiling, "static", {friction=0.5, bounce=0.3})
-    ceiling:toBack()
+    ceiling.y = 5    
     ceiling.isVisible = false
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
@@ -452,21 +428,26 @@ function scene:create( event )
     rWall = display.newImageRect("Images/Rwall.png", 100, 1024)
     rWall.x = 1000
     rWall.y = display.contentCenterY
-    physics.addBody(rWall, "static", {friction=0.5, bounce=0.3})
-    rWall:toBack()
     rWall.isVisible = false
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( rWall )
+
+    --Insert the right wall
+    lWall = display.newImageRect("Images/Rwall.png", 100, 1024)
+    lWall.x = 10
+    lWall.y = display.contentCenterY
+    lWall.isVisible = false
+
+    -- Insert objects into the scene group in order to ONLY be associated with this scene
+    sceneGroup:insert( lWall )
 
     --create the circle
     questionCircle = display.newImageRect("Images/circle.png", 100, 100)
     questionCircle.x = 350
     questionCircle.y = 650
     questionCircle.myName = "questionCircle"
-    questionCircle:toBack()
     
-
     sceneGroup:insert( questionCircle )
 
     --create the second circle
@@ -474,11 +455,9 @@ function scene:create( event )
     questionCircle2.x = 650
     questionCircle2.y = 650
     questionCircle2.myName = "questionCircle2"
-    questionCircle2:toBack()
+
+    sceneGroup:insert( questionCircle2 )  
     
-
-    sceneGroup:insert( questionCircle2 )   
-
 end
 
 
@@ -493,7 +472,7 @@ function scene:show( event )
     local phase = event.phase
 
     --associates the back butto to only be in this scene
-    sceneGroup:insert( backButton ) 
+    
     -----------------------------------------------------------------------------------------
 
     if ( phase == "will" ) then
@@ -512,21 +491,21 @@ function scene:show( event )
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
 
-        numLives = 3
+        lives = 2
         questionsAnswered = 0
 
         -- make all soccer balls visible
-        MakeCirclesVisible()
+        --MakeCirclesVisible()
+        GameOver()
 
         -- add physics bodies to each object
         AddPhysicsBodies()
 
         -- add collision listeners to objects
-        AddCollisionListenersL3C1()
-        AddCollisionListenersL3C2()
+        AddCollisionListeners()
 
         -- create the character, add physics bodies and runtime listeners
-        ReplaceCharacterL1()
+        ReplaceCharacterL3()
     end
 end --function scene:show( event )
     
@@ -544,22 +523,21 @@ function scene:hide( event )
     if ( phase == "will" ) then
         -- Called when the scene is on screen (but is about to go off screen).
         -- Insert code here to "pause" the scene.
-        -- Example: stop timers, stop animation, stop audio, etc.
-        YouWin()
+        -- Example: stop timers, stop animation, stop audio, etc.        
 
     -----------------------------------------------------------------------------------------
 
     elseif ( phase == "did" ) then
         -- Called immediately after scene goes off screen.
         -- Insert code here to make the scene come alive.
-        -- Example: start timers, begin animation, play audio, etc.
-        ReplaceCharacterL1()
+        -- Example: start timers, begin animation, play audio, etc.    
         RemovePhysicsBodies()
-        physics.stop()
+        display.remove(character)
+        
         RemoveArrowEventListeners()
         RemoveRuntimeListeners()
-        display.remove(character) 
-        ResumeGame()
+        physics.stop()
+
     end
 
 end --function scene:hide( event )
