@@ -59,8 +59,8 @@ local Y2 = 650
 local userAnswer
 local textTouched = false
 
-local totalSeconds = 20
-local secondsLeft = 20
+local totalSeconds = 10
+local secondsLeft = 10
 local clockText
 local countDownTimer
 
@@ -82,16 +82,6 @@ local incorrectSoundChannel
 --LOCAL FUNCTIONS
 -----------------------------------------------------------------------------------------
 
-
---create the game over image 
-local function GameOver()
-    if (lives == 0) then
-        gameOver = display.newImageRect("Images/gameOver.png", 2048, 1536)
-        gameOverSoundChannel = audio.play(gameOverSound)
-    end
-end
-
-
 --this function counts down the time
 local function UpdateTime()
 
@@ -106,8 +96,8 @@ local function UpdateTime()
         secondsLeft = totalSeconds
         -- decrease life
         lives = lives - 1 
-        -- call game over or ask another question
-        GameOver()
+        composer.hideOverlay("crossFade", 400 )
+        ResumeLevel1()
     end       
 end
 

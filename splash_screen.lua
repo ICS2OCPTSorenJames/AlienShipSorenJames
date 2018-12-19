@@ -1,11 +1,10 @@
 -----------------------------------------------------------------------------------------
---
--- splash_screen.lua
--- Created by: Soren Drew
--- Date: November 12th 2018
--- Description: This is the splash screen of the game. It displays the 
--- company logo that...
+-- Title: Company Logo Animation
+-- Name: James Lyall
+-- Course: ICS2O
+-- This program displays the company logo for the game
 -----------------------------------------------------------------------------------------
+
 
 -- Use Composer Library
 local composer = require( "composer" )
@@ -15,51 +14,71 @@ sceneName = "splash_screen"
 
 -----------------------------------------------------------------------------------------
 
+-- Hide the status bar.
+display.setStatusBar(display.HiddenStatusBar)
+
 -- Create Scene Object
-local scene = composer.newScene( splash_screen )
+local scene = composer.newScene( splash_screen2 )
+
+----------------------------------------------------------------------------------------
+-- SOUNDS
+-----------------------------------------------------------------------------------------
+ 
+local backgroundSound = audio.loadSound("Sounds/AppLogoScreen.mp3")
+local backgroundSoundChannel
+
+local CometSound = audio.loadSound( "Sounds/swoosh2.mp3" )
+local CometSoundChannel
 
 ----------------------------------------------------------------------------------------
 -- LOCAL VARIABLES
 -----------------------------------------------------------------------------------------
  
 -- The local variables for this scene
-local FlossBoss
-local FlossBoss2
-local comet1
-local comet2
-local scrollSpeedComet1 = 6
-local scrollSpeedComet2 = 6
-
-
-----------------------------------------------------------------------------------------
--- SOUNDS
------------------------------------------------------------------------------------------
- 
-
-local swooshSound2 = audio.loadSound("Sounds/swoosh2.mp3")
-local swooshSoundChannel2
+local CompanyLogo
+local Comet
+local Comet2
+local scrollSpeed = -5
 
 --------------------------------------------------------------------------------------------
 -- LOCAL FUNCTIONS
 --------------------------------------------------------------------------------------------
 
-
--- The function moves the second comet across the screen
-local function moveComet2(event)
-    comet2.x = comet2.x - scrollSpeedComet2
-    comet2.y = comet2.y + scrollSpeedComet2    
+-- function: MoveComet
+-- Input: this function accepts an event listener
+-- Output: none
+-- Description: This function adds the scroll speed to the x-value of the ship
+local function MoveComet(event)
+    -- add the scroll speed to the x-value of the ship
+    Comet.y = Comet.y - scrollSpeed
+    Comet.x = Comet.x + scrollSpeed
+    -- make car opacity fade out
+    Comet.alpha = Comet.alpha - 0.001
+    CompanyLogo.alpha = CompanyLogo.alpha - 0.001
 end
-
--- The function moves the first comet across the screen
-local function moveComet1(event)
-    comet1.x = comet1.x + scrollSpeedComet1
-    comet1.y = comet1.y - scrollSpeedComet1
     
+-- MoveComet will be called over and over again
+Runtime:addEventListener("enterFrame", MoveComet)
+
+-- function: MoveComet
+-- Input: this function accepts an event listener
+-- Output: none
+-- Description: This function adds the scroll speed to the x-value of the comet
+local function MoveComet2(event)
+    -- add the scroll speed to the x-value of the comet
+    Comet2.y = Comet2.y - scrollSpeed
+    Comet2.x = Comet2.x - scrollSpeed
+    -- make car opacity fade out
+    Comet2.alpha = Comet.alpha - 0.001
 end
+    
+-- MoveComet will be called over and over again
+Runtime:addEventListener("enterFrame", MoveComet2)
+
 
 -- The function that will go to the main menu 
-local function gotoSplashScreen2()
-    composer.gotoScene( "splash_screen2" )
+local function gotoMainMenu()
+    composer.gotoScene( "main_menu" )
 end
 
 -----------------------------------------------------------------------------------------
@@ -73,39 +92,35 @@ function scene:create( event )
     local sceneGroup = self.view
 
     -- create the background image
-    local background = display.newImageRect("Images/background.jfif", 2048, 1536)
-
-
-    FlossBoss = display.newImageRect("Images/CompanyLogoSoren.png", 600, 600)
-    FlossBoss2 = display.newImageRect("Images/CompanyLogoGlow.png", 600, 600)
+    CompanyLogo = display.newImageRect("Images/CompanyLogo.png", 1050, 770)
     
-    comet1 = display.newImageRect("Images/comet.png", 150, 150)
-    comet2 = display.newImageRect("Images/comet.png", 150, 150)
 
-    -- set the initial x and y position of the flossBosses
-    comet1.x = 0
-    comet1.y = 450
+    Comet = display.newImage("Images/comet.png", 925, 0)
+    Comet2 = display.newImage("Images/comet.png", 100, 0)
 
-    comet2.x = 1024
-    comet2.y = 150
+    -- scale the comet
 
-    FlossBoss.isVisible = true
-    FlossBoss2.isVisible = false
+    Comet:scale( 0.5, 0.5)
+    Comet2:scale( 0.5, 0.5)
 
-    comet1:rotate(180)
+    --Comet.x = display.contentCenterX
+    --Comet.y = display.contentCenterY
+    CompanyLogo.x = display.contentCenterX
+    CompanyLogo.y = display.contentCenterY
 
-    FlossBoss.x = 570
-    FlossBoss.y = 350
+    -- rotate the second comet so it faces dowm
 
-    FlossBoss2.x = 570
-    FlossBoss2.y = 350
+    Comet2:rotate(260)
+
+
+    -- set images transparent
+    CompanyLogo.alpha = 1
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
-    sceneGroup:insert( background )
-    sceneGroup:insert( comet1 )
-    sceneGroup:insert( comet2 )
-    sceneGroup:insert( FlossBoss )
-    sceneGroup:insert( FlossBoss2 )
+    sceneGroup:insert( CompanyLogo )
+    sceneGroup:insert( Comet )
+    sceneGroup:insert( Comet2 )
+
 
 
 end -- function scene:create( event )
@@ -132,15 +147,11 @@ function scene:show( event )
     -----------------------------------------------------------------------------------------
 
     elseif ( phase == "did" ) then
-        --play the sound    
-        swooshSoundChannel2 = audio.play(swooshSound2)
-
-        -- Call the movecomet1 and movecomet2 function as soon as we enter the frame.
-        Runtime:addEventListener("enterFrame", moveComet1)
-        Runtime:addEventListener("enterFrame", moveComet2)
+        --play the sound
+        CometSoundChannel = audio.play(CometSound)
 
         -- Go to the main menu screen after the given time.
-        timer.performWithDelay ( 2500, gotoSplashScreen2)          
+        timer.performWithDelay ( 3000, gotoMainMenu)          
         
     end
 
@@ -167,10 +178,8 @@ function scene:hide( event )
     -- Called immediately after scene goes off screen.
     elseif ( phase == "did" ) then
         --stop the audio
-       audio.stop(swooshSoundChannel2)
+       audio.stop(CometSoundChannel)
 
-       Runtime:removeEventListener("enterFrame", moveComet1)
-       Runtime:removeEventListener("enterFrame", moveComet2)
     end
 
 end --function scene:hide( event )

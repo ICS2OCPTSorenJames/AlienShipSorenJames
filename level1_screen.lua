@@ -119,13 +119,7 @@ local function MakeCirclesVisible()
 end
 
 
---create the game over image 
-local function GameOver()
-    if (lives == 0) then
-        gameOver = display.newImageRect("Images/gameOver.png", 2048, 1536)
-        gameOverSoundChannel = audio.play(gameOverSound)
-    end
-end
+
 
 local function YouWin()
     if (questionsAnswered == 2) then 
@@ -134,9 +128,7 @@ local function YouWin()
 end
 
 local function YouLose()
-    if (lives == 0) then 
-        composer.gotoScene( "you_lose" )
-    end
+    composer.gotoScene( "you_lose" )
 end
 
 
@@ -173,9 +165,10 @@ local function onCollision( self, event )
 
     if ( event.phase == "began" ) then
 
-        if  (event.target.myName == "questionCircle") then
+        if  (event.target.myName == "questionCircle") or 
+            (event.target.myName == "questionCircle2") then
 
-            -- get the ball that the user hit
+            -- get the circle that the user hit
             circle = event.target  
 
             -- remove runtime listeners that move the character
@@ -195,31 +188,11 @@ local function onCollision( self, event )
             composer.showOverlay( "level1_question", { isModal = true, effect = "fade", time = 100})
 
             -- Increment questions answered
-            questionsAnswered = questionsAnswered + 1
-
-        elseif (event.target.myName == "questionCircle2") then
-
-            -- remove runtime listeners that move the character
-            RemoveArrowEventListeners()
-            RemoveRuntimeListeners()
-
-                -- remove the character from the display
-                --display.remove(character)
-
-            -- stop the character from moving
-            motionx = 0
-
-            -- make the character invisible
-            character.isVisible = false
-
-            -- show overlay with math question
-            composer.showOverlay( "level1_question2", { isModal = true, effect = "fade", time = 100})
-                
-            -- Increment questions answered
-            questionsAnswered = questionsAnswered + 1
+            questionsAnswered = questionsAnswered + 1    
         end
     end
 end
+
 
 
 local function ReplaceCharacterL1()
@@ -305,6 +278,10 @@ function ResumeLevel1()
             physics.removeBody(circle)
             circle.isVisible = false  
         end
+    end
+
+    if (lives == 0) then
+        YouLose()
     end
 end
 
@@ -495,7 +472,6 @@ function scene:show( event )
 
         -- make all soccer balls visible
         --MakeCirclesVisible()
-        GameOver()
 
         -- add physics bodies to each object
         AddPhysicsBodies()
@@ -505,8 +481,6 @@ function scene:show( event )
 
         -- create the character, add physics bodies and runtime listeners
         ReplaceCharacterL1()
-        YouWin()
-        YouLose()
     end
 end --function scene:show( event )
     
