@@ -213,7 +213,7 @@ end
 
 
 local function ReplaceCharacterL2()
-    character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
+    character = display.newImageRect("Images/Character1.png", 100, 150)
     character.x = 100
     character.y = 650
     character.width = 75
@@ -356,11 +356,11 @@ function scene:create( event )
 
     sceneGroup:insert( backButton )
 
-    character = display.newImageRect("Images/KickyKatRight.png", 100, 150)
-    character.x = 655
-    character.y = 650
-    character.width = 75
-    character.height = 100
+    character = display.newImageRect("Images/Character1.png", 100, 150)
+    character.x = 700
+    character.y = 700
+    character.width = 100
+    character.height = 150
     character.myName = "KickyKat"
     character.isVisible = false
 
