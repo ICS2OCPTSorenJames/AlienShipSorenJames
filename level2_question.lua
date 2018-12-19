@@ -59,8 +59,8 @@ local Y2 = 650
 local userAnswer
 local textTouched = false
 
-local totalSeconds = 20
-local secondsLeft = 20
+local totalSeconds = 10
+local secondsLeft = 10
 local clockText
 local countDownTimer
 
@@ -96,8 +96,8 @@ local function UpdateTime()
         secondsLeft = totalSeconds
         -- decrease life
         lives = lives - 1 
-        -- call game over or ask another question
-        GameOver()
+        composer.hideOverlay("crossFade", 400 )
+        ResumeLevel2()
     end       
 end
 
@@ -174,11 +174,11 @@ end
 
 local function DisplayQuestion()
     --creating random numbers
-    firstNumber = math.random (0,15)
-    secondNumber = math.random (0,15)
+    firstNumber = math.random (20,40)
+    secondNumber = math.random (0,19)
 
     -- calculate answer
-    answer = firstNumber + secondNumber
+    answer = firstNumber - secondNumber
 
     -- calculate wrong answers
     wrongAnswer1 = answer + math.random(1, 3)
@@ -187,7 +187,7 @@ local function DisplayQuestion()
 
 
     --creating the question depending on the selcetion number
-    questionText.text = firstNumber .. " + " .. secondNumber .. " ="
+    questionText.text = firstNumber .. " - " .. secondNumber .. " ="
 
     --creating answer text from list it corispondes with the animals list
     answerText.text = answer
