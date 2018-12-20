@@ -42,6 +42,7 @@ local background
 
 local questionCircle
 local questionCircle2
+local portal
 
 local questionsAnswered = 0
 
@@ -206,6 +207,42 @@ local function onCollision( self, event )
     end
 end
 
+local function onCollisionPortal( self, event )
+    -- for testing purposes
+    --print( event.target )        --the first object in the collision
+    --print( event.other )         --the second object in the collision
+    --print( event.selfElement )   --the element (number) of the first object which was hit in the collision
+    --print( event.otherElement )  --the element (number) of the second object which was hit in the collision
+    --print( event.target.myName .. ": collision began with " .. event.other.myName )
+
+    if ( event.phase == "began" ) then
+
+        if  (event.target.myName == "portal") then
+
+            -- get the circle that the user hit
+            circle = event.target 
+
+
+            -- remove runtime listeners that move the character
+            RemoveArrowEventListeners()
+            RemoveRuntimeListeners()
+
+            -- remove the character from the display
+            --display.remove(character)
+
+            -- stop the character from moving
+            motionx = 0
+
+            -- make the character invisible
+            character.isVisible = false
+            MakeCirclesInvisible()
+
+            -- show overlay with math question
+            composer.gotoScene( "level2_screen" )   
+        end
+    end
+end
+
 local function ReplaceCircles()
     --create the circle
     questionCircle = display.newImageRect("Images/circle.png", 100, 100)
@@ -219,16 +256,13 @@ local function ReplaceCircles()
     questionCircle2.x = 650
     questionCircle2.y = 650
     questionCircle2.myName = "questionCircle2"
-
 end
 
 local function RemoveCircles()
     display.remove(questionCircle)
     display.remove(questionCircle2)
+    display.remove(portal)
 end
-
-
-
 
 local function ReplaceCharacterL1()
     character = display.newImageRect("Images/Character1.png", 100, 150)
@@ -258,6 +292,7 @@ local function AddPhysicsBodies()
     --add to the physics engine
     physics.addBody (questionCircle, "static", {density=0, friction=0, bounce=0} )
     physics.addBody (questionCircle2, "static", {density=0, friction=0, bounce=0} )
+    physics.addBody (portal, "static", {density=0, friction=0, bounce=0} )
     physics.addBody(floor, "static", {density=1, friction=0.3, bounce=0.2} )
     physics.addBody(ceiling, "static", {friction=0.5, bounce=0.3})
     physics.addBody(rWall, "static", {friction=0.5, bounce=0.3})
@@ -280,12 +315,15 @@ function AddCollisionListeners()
     questionCircle:addEventListener( "collision" )
     questionCircle2.collision = onCollision
     questionCircle2:addEventListener( "collision" )
+    portal.collision = onCollisionPortal
+    portal:addEventListener( "collision" )
 end
 
 --remove collision to the first circle
 function RemoveCollisionListeners()
 	questionCircle:removeEventListener( "collision" )
     questionCircle2:removeEventListener( "collision" )
+    portal:removeEventListener( "collision" )
 end
 
 -- Creating Transitioning Function back to main menu
@@ -436,8 +474,12 @@ function scene:create( event )
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( lWall )
 
-    
-    
+    portal = display.newImageRect("Images/Portal.png", 150, 150)
+    portal.x = 940
+    portal.y = 520
+    portal.myName = "portal"
+
+    sceneGroup:insert( portal )   
 end
 
 
