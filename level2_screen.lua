@@ -17,6 +17,9 @@ local widget = require( "widget" )
 -- load physics
 local physics = require("physics")
 
+-- start physics
+physics.start()
+
 -----------------------------------------------------------------------------------------
 
 -- Naming Scene
