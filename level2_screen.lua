@@ -50,6 +50,7 @@ local backButton
 local questionsAnswered = 0
 
 local circle
+local portal
 
 local character
 
@@ -69,6 +70,8 @@ local incorrectText
 local livesText
 
 local floor
+local floor2
+local floor3
 local ceiling
 local rWall
 
@@ -188,6 +191,7 @@ local function onCollision( self, event )
             composer.showOverlay( "level2_question", { isModal = true, effect = "fade", time = 100})
 
             -- Increment questions answered
+<<<<<<< HEAD
             questionsAnswered = questionsAnswered + 1
 
         elseif (event.target.myName == "questionCircle2") then
@@ -198,6 +202,55 @@ local function onCollision( self, event )
 
                 -- remove the character from the display
                 --display.remove(character)
+=======
+            questionsAnswered = questionsAnswered + 1    
+        end
+    end
+
+    if ( event.phase == "began" ) then
+
+        if (event.target.myName == "portal") then
+
+            -- get the circle that the user hit
+            circle = event.target 
+
+
+            -- remove runtime listeners that move the character
+            RemoveArrowEventListeners()
+            RemoveRuntimeListeners()
+
+            -- remove the character from the display
+            --display.remove(character)
+
+            -- stop the character from moving
+            motionx = 0
+
+            -- make the character invisible
+            character.isVisible = false
+            MakeCirclesInvisible()
+
+            -- show overlay with math question
+            composer.gotoScene( "level3_screen" ) 
+        end
+    end
+end
+
+
+local function ReplaceCircles()
+    --create the circle
+    questionCircle = display.newImageRect("Images/circle.png", 100, 100)
+    questionCircle.x = 460
+    questionCircle.y = 270
+    questionCircle.myName = "questionCircle"
+    
+
+    --create the second circle
+    questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
+    questionCircle2.x = 650
+    questionCircle2.y = 152
+    questionCircle2.myName = "questionCircle2"
+end
+>>>>>>> dc682210d67df40359669d2d671975e7a7dbb398
 
             -- stop the character from moving
             motionx = 0
@@ -218,9 +271,15 @@ end
 local function ReplaceCharacterL2()
     character = display.newImageRect("Images/Character1.png", 100, 150)
     character.x = 100
+<<<<<<< HEAD
     character.y = 650
     character.width = 75
     character.height = 100
+=======
+    character.y = 20
+    character.width = 150
+    character.height = 150
+>>>>>>> dc682210d67df40359669d2d671975e7a7dbb398
     character.myName = "KickyKat"
 
     -- intialize horizontal movement of character
@@ -243,7 +302,10 @@ local function AddPhysicsBodies()
     --add to the physics engine
     physics.addBody (questionCircle, "static", {density=0, friction=0, bounce=0} )
     physics.addBody (questionCircle2, "static", {density=0, friction=0, bounce=0} )
+    physics.addBody (portal, "static", {density=0, friction=0, bounce=0} )
     physics.addBody(floor, "static", {density=1, friction=0.3, bounce=0.2} )
+    physics.addBody(floor2, "static", {density=1, friction=0.3, bounce=0.2} )
+    physics.addBody(floor3, "static", {density=1, friction=0.3, bounce=0.2} )
     physics.addBody(ceiling, "static", {friction=0.5, bounce=0.3})
     physics.addBody(rWall, "static", {friction=0.5, bounce=0.3})
 end
@@ -252,6 +314,8 @@ local function RemovePhysicsBodies()
     --physics.removeBody(questionCircle)
     --physics.removeBody(questionCircle2)
     physics.removeBody(floor)
+    physics.removeBody(floor2)
+    physics.removeBody(floor3)
     physics.removeBody(ceiling)
     physics.removeBody(rWall)
 end
@@ -263,12 +327,15 @@ function AddCollisionListeners()
     questionCircle:addEventListener( "collision" )
     questionCircle2.collision = onCollision
     questionCircle2:addEventListener( "collision" )
+    portal.collision = onCollision
+    portal:addEventListener( "collision" )
 end
 
 --remove collision to the first circle
 function RemoveCollisionListeners()
     questionCircle:removeEventListener( "collision" )
     questionCircle2:removeEventListener( "collision" )
+    portal:removeEventListener( "collision" )
 end
 
 -- Creating Transitioning Function back to main menu
@@ -284,8 +351,13 @@ end
 function ResumeLevel2()
 
     character.isVisible = true
+<<<<<<< HEAD
     character.x = 550
     character.y = 650
+=======
+    --character.x = 510
+    --character.y = 650
+>>>>>>> dc682210d67df40359669d2d671975e7a7dbb398
 
     print ("***lives = " .. lives)
 
@@ -332,7 +404,7 @@ function scene:create( event )
     local sceneGroup = self.view    
 
     -- Insert the background image
-    background = display.newImageRect("Images/Level1Screen.png", display.contentWidth, display.contentHeight)
+    background = display.newImageRect("Images/Level2Screen.png", display.contentWidth, display.contentHeight)
     background.x = display.contentWidth / 2 
     background.y = display.contentHeight / 2   
 
@@ -383,13 +455,21 @@ function scene:create( event )
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( rArrow)
 
+    -- add the portal circle
+    portal = display.newImageRect("Images/Portal.png", 130, 130)
+    portal.x = display.contentWidth * 9 / 10
+    portal.y = 500
+
     --Insert the right arrow
     lArrow = display.newImageRect("Images/LeftArrowUnpressed.png", 100, 50)
     lArrow.x = display.contentWidth * 7.7 / 10
     lArrow.y = 680
+
+    -- Insert objects into the scene group in order to ONLY be associated with this scene
+    sceneGroup:insert( portal )
    
     -- Insert objects into the scene group in order to ONLY be associated with this scene
-    sceneGroup:insert( lArrow)
+    sceneGroup:insert( lArrow )
 
     --Insert the left arrow
     uArrow = display.newImageRect("Images/UpArrowUnpressed.png", 50, 100)
@@ -397,18 +477,34 @@ function scene:create( event )
     uArrow.y = display.contentHeight * 8.5 / 10
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
-    sceneGroup:insert( uArrow)
+    sceneGroup:insert( uArrow )
 
     --Insert the floor
-    floor = display.newImageRect("Images/Level-1Floor.png", 1024, 100)
-    floor.x = display.contentCenterX
-    floor.y = 750
+    floor = display.newImageRect("Images/Level-1Floor.png", 190, 10)
+    floor.x = display.contentWidth * 4.5 / 10
+    floor.y = 325
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( floor )
 
+    --Insert the floor
+    floor2 = display.newImageRect("Images/Level-1Floor.png", 190, 10)
+    floor2.x = display.contentWidth * 1 / 10
+    floor2.y = display.contentHeight * 3.5 / 10
+
+    -- Insert objects into the scene group in order to ONLY be associated with this scene
+    sceneGroup:insert( floor2 )
+
+    --Insert the floor
+    floor3 = display.newImageRect("Images/Level-1Floor.png", 150, 10)
+    floor3.x = display.contentWidth * 6.5 / 10
+    floor3.y = display.contentHeight *  2.7 / 10
+
+    -- Insert objects into the scene group in order to ONLY be associated with this scene
+    sceneGroup:insert( floor3 )
+
     --Insert the ceiling
-    ceiling = display.newImageRect("Images/Level-1Floor.png", 1024, 100)
+    ceiling = display.newImageRect("Images/Level-1Floor.png", 1024, 1)
     ceiling.x = display.contentCenterX
     ceiling.y = 5    
     ceiling.isVisible = false
@@ -417,7 +513,7 @@ function scene:create( event )
     sceneGroup:insert( ceiling )
 
     --Insert the right wall
-    rWall = display.newImageRect("Images/Rwall.png", 100, 1024)
+    rWall = display.newImageRect("Images/Rwall.png", 10, 1024)
     rWall.x = 1000
     rWall.y = display.contentCenterY
     rWall.isVisible = false
