@@ -42,6 +42,8 @@ local wrongAnswer1
 local wrongAnswer2
 local wrongAnswer3
 
+local randomOperation
+
 local answerText 
 local wrongAnswerText1
 local wrongAnswerText2
@@ -98,6 +100,7 @@ local function UpdateTime()
         lives = lives - 1 
         composer.hideOverlay("crossFade", 400 )
         ResumeLevel3()
+
     end       
 end
 
@@ -116,6 +119,7 @@ local function TouchListenerAnswer(touch)
         correctSoundChannel = audio.play(correctSound)
         composer.hideOverlay("crossFade", 400 )
         ResumeLevel3()
+
     end 
 end
 
@@ -127,7 +131,8 @@ local function TouchListenerWrongAnswer(touch)
         incorrectSoundChannel = audio.play(incorrectSound)
         lives = lives - 1
         composer.hideOverlay("crossFade", 400 )
-        ResumeLevel3()        
+        ResumeLevel3()
+        
     end 
 end
 
@@ -139,7 +144,8 @@ local function TouchListenerWrongAnswer2(touch)
         incorrectSoundChannel = audio.play(incorrectSound)
         lives = lives - 1
         composer.hideOverlay("crossFade", 400 )
-        ResumeLevel3()    
+        ResumeLevel3()
+   
     end 
 end
 
@@ -151,7 +157,8 @@ local function TouchListenerWrongAnswer3(touch)
         incorrectSoundChannel = audio.play(incorrectSound)
         lives = lives - 1
         composer.hideOverlay("crossFade", 400 )
-        ResumeLevel3()   
+        ResumeLevel3()
+  
     end 
 end
 
@@ -173,29 +180,95 @@ local function RemoveTextListeners()
 end
 
 local function DisplayQuestion()
-    --creating random numbers
-    firstNumber = math.random (0,15)
-    secondNumber = math.random (0,15)
 
-    -- calculate answer
-    answer = firstNumber + secondNumber
+    randomOperation = math.random(1,3)
 
-    -- calculate wrong answers
-    wrongAnswer1 = answer + math.random(1, 3)
-    wrongAnswer2 = answer + math.random(4, 6)
-    wrongAnswer3 = answer + math.random(7, 10)
+    if (randomOperation == 1) then
+
+        --creating random numbers
+        firstNumber = math.random (0,25)
+        secondNumber = math.random (0,25)
+
+        -- calculate answer
+        answer = firstNumber + secondNumber
+
+        -- calculate wrong answers
+        wrongAnswer1 = answer + math.random(1, 3)
+        wrongAnswer2 = answer + math.random(4, 6)
+        wrongAnswer3 = answer + math.random(7, 10)
 
 
-    --creating the question depending on the selcetion number
-    questionText.text = firstNumber .. " + " .. secondNumber .. " ="
+        --creating the question depending on the selcetion number
+        questionText.text = firstNumber .. " + " .. secondNumber .. " ="
 
-    --creating answer text from list it corispondes with the animals list
-    answerText.text = answer
+        --creating answer text from list it corispondes with the animals list
+        answerText.text = answer
     
-    --creating wrong answers
-    wrongText1.text = wrongAnswer1
-    wrongText2.text = wrongAnswer2
-    wrongText3.text = wrongAnswer3
+        --creating wrong answers
+        wrongText1.text = wrongAnswer1
+        wrongText2.text = wrongAnswer2
+        wrongText3.text = wrongAnswer3
+
+    elseif (randomOperation == 2) then 
+        --creating random numbers
+        firstNumber = math.random (0,15)
+        secondNumber = math.random (0,15)
+
+        -- calculate answer
+        answer = firstNumber - secondNumber
+
+        -- calculate wrong answers
+        wrongAnswer1 = answer + math.random(1, 3)
+        wrongAnswer2 = answer + math.random(4, 6)
+        wrongAnswer3 = answer + math.random(7, 10)
+
+
+        --creating the question depending on the selcetion number
+        questionText.text = firstNumber .. " - " .. secondNumber .. " ="
+
+        --creating answer text from list it corispondes with the animals list
+        answerText.text = answer
+    
+        --creating wrong answers
+        wrongText1.text = wrongAnswer1
+        wrongText2.text = wrongAnswer2
+        wrongText3.text = wrongAnswer3
+
+        if (firstNumber < secondNumber) then 
+            firstNumber = math.random(10,15)
+            secondNumber = math.random(1,9)
+        end
+
+    elseif(randomOperation == 3) then
+        --creating random numbers
+        firstNumber = math.random (0,10)
+        secondNumber = math.random (0,10)
+
+        -- calculate answer
+        answer = firstNumber * secondNumber
+
+        -- calculate wrong answers
+        wrongAnswer1 = answer + math.random(1, 3)
+        wrongAnswer2 = answer + math.random(4, 6)
+        wrongAnswer3 = answer + math.random(7, 10)
+
+
+        --creating the question depending on the selcetion number
+        questionText.text = firstNumber .. " x " .. secondNumber .. " ="
+
+        --creating answer text from list it corispondes with the animals list
+        answerText.text = answer
+    
+        --creating wrong answers
+        wrongText1.text = wrongAnswer1
+        wrongText2.text = wrongAnswer2
+        wrongText3.text = wrongAnswer3
+
+        if (firstNumber < secondNumber) then 
+            firstNumber = math.random(6,10)
+            secondNumber = math.random(1,5)
+        end
+    end
 end
 
 local function PositionAnswers()

@@ -17,6 +17,8 @@ local widget = require( "widget" )
 -- load physics
 local physics = require("physics")
 
+physics.start()
+
 -----------------------------------------------------------------------------------------
 
 -- Naming Scene
@@ -105,6 +107,7 @@ local function up (touch)
         character:setLinearVelocity( 0, LINEAR_VELOCITY )
     end
 end
+
 
 -- Move character horizontally
 local function movePlayer (event)
@@ -197,7 +200,7 @@ local function onCollision( self, event )
             MakeCirclesInvisible()
 
             -- show overlay with math question
-            composer.showOverlay( "level1_question", { isModal = true, effect = "fade", time = 100})
+            composer.showOverlay( "level3_question", { isModal = true, effect = "fade", time = 100})
 
             -- Increment questions answered
             questionsAnswered = questionsAnswered + 1    
@@ -241,6 +244,7 @@ local function onCollisionPortal( self, event )
     end
 end
 
+
 local function onCollisionFloor( self, event )
     -- for testing purposes
     --print( event.target )        --the first object in the collision
@@ -269,10 +273,7 @@ local function onCollisionFloor( self, event )
 
             -- make the character invisible
             character.isVisible = false
-            MakeCirclesInvisible()
-
-            -- show overlay with math question
-            composer.gotoScene( "you_lose" )   
+            MakeCirclesInvisible()  
         end
     end
 end
@@ -281,27 +282,21 @@ local function ReplaceCircles()
     --create the circle
     questionCircle = display.newImageRect("Images/circle.png", 100, 100)
     questionCircle.x = 310
-    questionCircle.y = 270
+    questionCircle.y = 480
     questionCircle.myName = "questionCircle"
     
 
     --create the second circle
     questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
-    questionCircle2.x = 750
-    questionCircle2.y = 330
+    questionCircle2.x = 770
+    questionCircle2.y = 400
     questionCircle2.myName = "questionCircle2"
-end
-
-local function RemoveCircles()
-    display.remove(questionCircle)
-    display.remove(questionCircle2)
-    display.remove(portal)
 end
 
 local function ReplaceCharacterL3()
     character = display.newImageRect("Images/Character2.png", 100, 150)
     character.x = 100
-    character.y = 400
+    character.y = 200
     character.width = 150
     character.height = 200
     character.myName = "KickyKat"
@@ -321,6 +316,13 @@ local function ReplaceCharacterL3()
     -- add back runtime listeners
     AddRuntimeListeners()
 end
+
+local function RemoveCircles()
+    display.remove(questionCircle)
+    display.remove(questionCircle2)
+    display.remove(portal)
+end
+
 
 local function AddPhysicsBodies()
     --add to the physics engine
@@ -378,8 +380,8 @@ end
 -- GLOBAL FUNCTIONS
 -----------------------------------------------------------------------------------------
 
-function ResumeLevel1()
-
+function ResumeLevel3()
+  
     character.isVisible = true
     character.x = 290
     character.y = 310
@@ -460,7 +462,7 @@ function scene:create( event )
     -- Insert the platforms
     platform1 = display.newImageRect("Images/Level-1Platform1.png", 190, 30)
     platform1.x = 330
-    platform1.y = 350
+    platform1.y = 550
     
         
     sceneGroup:insert( platform1 )
@@ -468,14 +470,14 @@ function scene:create( event )
     -- Insert the platforms
     platform2 = display.newImageRect("Images/Level-1Platform1.png", 190, 30)
     platform2.x = 770
-    platform2.y = 400
+    platform2.y = 470
         
     sceneGroup:insert( platform2 )
 
     -- Insert the platforms
     startPlatform = display.newImageRect("Images/Level-1Platform1.png", 190, 50)
     startPlatform.x = 100
-    startPlatform.y = 450
+    startPlatform.y = 250
         
     sceneGroup:insert( startPlatform )
 
