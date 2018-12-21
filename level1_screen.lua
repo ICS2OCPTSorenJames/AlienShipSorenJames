@@ -237,7 +237,7 @@ local function onCollisionPortal( self, event )
             character.isVisible = false
             MakeCirclesInvisible()
 
-            -- show overlay with math question
+            -- go to next level
             composer.gotoScene( "level3_screen" )   
         end
     end

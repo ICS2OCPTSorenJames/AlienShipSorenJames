@@ -296,7 +296,7 @@ end
 local function ReplaceCharacterL3()
     character = display.newImageRect("Images/Character2.png", 100, 150)
     character.x = 100
-    character.y = 200
+    character.y = 100
     character.width = 150
     character.height = 200
     character.myName = "KickyKat"
