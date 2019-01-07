@@ -68,6 +68,11 @@ local function InstructionsTransition( )
     composer.gotoScene( "instructions_screen", {effect = "fromLeft", time = 1000})
 end 
 
+-- Creating Transition to level select Screen
+local function LevelSelectTransition( )
+    composer.gotoScene( "levelSelect_screen", {effect = "fromLeft", time = 1000})
+end 
+
 
 -----------------------------------------------------------------------------------------
 -- GLOBAL SCENE FUNCTIONS
@@ -102,7 +107,7 @@ function scene:create( event )
     playButton = widget.newButton( 
         {   
             -- Set its position on the screen relative to the screen size
-            x = display.contentWidth/2,
+            x = 395,
             y = display.contentHeight*7/8,
             width = 200,
             height = 200,
@@ -120,7 +125,7 @@ function scene:create( event )
     -- Creating Credits Button
     creditsButton = widget.newButton( 
         { -- Set its position on the screen relative to the screen size
-            x = 200,
+            x = 170,
             y = display.contentHeight*7/8,
             --create it's width and height
             width = 200,
@@ -139,7 +144,7 @@ function scene:create( event )
      --Creating Instruction Button
     instructionsButton = widget.newButton( 
         {-- Set its position on the screen relative to the screen size
-           x = 800,
+           x = 630,
            y = display.contentHeight*7/8,
             --create it's width and height
             width = 200,
@@ -153,22 +158,21 @@ function scene:create( event )
             onRelease = InstructionsTransition}) 
 
     -----------------------------------------------------------------------------------------
-
-       --Creating Mute Button
-    --[[--muteButton = widget.newButton( 
-       {-- Set its position on the screen relative to the screen size
-          x = 900,
-          y = 100,
-          --create it's width and height
-          width = 100,
-          height = 100,
+    --Creating Level Seclect Button
+    levelSelect = widget.newButton( 
+        {-- Set its position on the screen relative to the screen size
+           x = 870,
+           y = display.contentHeight*7/8,
+            --create it's width and height
+            width = 200,
+            height = 200,
 
             -- Insert the images here
-            defaultFile = "Images/volume.png",
-            overFile = "Images/mute.png",
+            defaultFile = "Images/levelSelectButton.png",
+            overFile = "Images/levelSelectButton.png",
 
-            -- When the button is released, stop the audio
-           onRelease = audio.stop}) --]]
+            -- When the button is released, call the Credits transition function
+            onRelease = LevelSelectTransition}) 
 
     -----------------------------------------------------------------------------------------
 
@@ -176,6 +180,7 @@ function scene:create( event )
     sceneGroup:insert( playButton )
     sceneGroup:insert( creditsButton )
     sceneGroup:insert( instructionsButton )
+    sceneGroup:insert( levelSelect )
 
 end -- function scene:create( event )   
 
