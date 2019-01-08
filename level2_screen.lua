@@ -17,6 +17,9 @@ local widget = require( "widget" )
 -- load physics
 local physics = require("physics")
 
+-- start physics
+physics.start()
+
 -----------------------------------------------------------------------------------------
 
 -- Naming Scene
@@ -42,10 +45,9 @@ local background
 
 local questionCircle
 local questionCircle2
+local backButton
 
 local questionsAnswered = 0
-
-local backButton
 
 local circle
 local portal
@@ -72,7 +74,6 @@ local floor2
 local floor3
 local ceiling
 local rWall
-local lWall
 
 -----------------------------------------------------------------------------------------
 -- SOUNDS
@@ -117,10 +118,16 @@ local function stop (event)
     end
 end
 
+local function MakeCirclesVisible()
+    questionCircle.isVisible = true
+    questionCircle2.isVisible = true
+end
 
 
 local function YouLose()
-    composer.gotoScene( "you_lose" )
+    if (lives == 0) then 
+        composer.gotoScene( "you_lose" )
+    end
 end
 
 
@@ -146,23 +153,6 @@ local function RemoveRuntimeListeners()
     Runtime:removeEventListener("touch", stop )
 end
 
-local function MakeCirclesInvisible()    
-    questionCircle.isVisible = false    
-    questionCircle2.isVisible = false
-end
-
-local function MakeCirclesVisible()
-    if (questionsAnswered == 0) then
-        questionCircle.isVisible = true
-        questionCircle2.isVisible = true
-    elseif (questionsAnswered == 1) then
-        questionCircle.isVisible = false   
-        questionCircle2.isVisible = true
-    elseif (questionsAnswered == 2) then
-        questionCircle.isVisible = false    
-        questionCircle2.isVisible = false
-    end
-end
 
 
 local function onCollision( self, event )
@@ -175,12 +165,10 @@ local function onCollision( self, event )
 
     if ( event.phase == "began" ) then
 
-        if  (event.target.myName == "questionCircle") or 
-            (event.target.myName == "questionCircle2") then
+        if  (event.target.myName == "questionCircle") then
 
-            -- get the circle that the user hit
-            circle = event.target 
-
+            -- get the ball that the user hit
+            circle = event.target  
 
             -- remove runtime listeners that move the character
             RemoveArrowEventListeners()
@@ -194,12 +182,12 @@ local function onCollision( self, event )
 
             -- make the character invisible
             character.isVisible = false
-            MakeCirclesInvisible()
 
             -- show overlay with math question
             composer.showOverlay( "level2_question", { isModal = true, effect = "fade", time = 100})
 
             -- Increment questions answered
+
             questionsAnswered = questionsAnswered + 1    
         end
     end
@@ -259,20 +247,31 @@ local function ReplaceCircles()
 
 end
 
-local function RemoveCircles()
-    display.remove(questionCircle)
-    display.remove(questionCircle2)
+
+            -- stop the character from moving
+            motionx = 0
+
+            -- make the character invisible
+            character.isVisible = false
+
+            -- show overlay with math question
+            composer.showOverlay( "level2_question2", { isModal = true, effect = "fade", time = 100})
+                
+            -- Increment questions answered
+            questionsAnswered = questionsAnswered + 1
+        end
+    end
 end
-
-
 
 
 local function ReplaceCharacterL2()
     character = display.newImageRect("Images/Character1.png", 100, 150)
     character.x = 100
+
     character.y = 20
     character.width = 150
     character.height = 150
+
     character.myName = "KickyKat"
 
     -- intialize horizontal movement of character
@@ -301,7 +300,6 @@ local function AddPhysicsBodies()
     physics.addBody(floor3, "static", {density=1, friction=0.3, bounce=0.2} )
     physics.addBody(ceiling, "static", {friction=0.5, bounce=0.3})
     physics.addBody(rWall, "static", {friction=0.5, bounce=0.3})
-    physics.addBody(lWall, "static", {friction=0.5, bounce=0.3})
 end
 
 local function RemovePhysicsBodies()
@@ -312,7 +310,6 @@ local function RemovePhysicsBodies()
     physics.removeBody(floor3)
     physics.removeBody(ceiling)
     physics.removeBody(rWall)
-    physics.removeBody(lWall)
 end
 
 --add collision to the first circle
@@ -346,14 +343,16 @@ end
 function ResumeLevel2()
 
     character.isVisible = true
+
     --character.x = 510
     --character.y = 650
 
+
+    print ("***lives = " .. lives)
+
     livesText.text = "Lives: " .. lives
-    print("***questionsAnswered = " .. questionsAnswered )
     AddRuntimeListeners()
     AddArrowEventListeners()
-    MakeCirclesVisible()
 
     if (questionsAnswered > 0) then
         if (circle ~= nil) and (circle.isBodyActive == true) then
@@ -361,9 +360,24 @@ function ResumeLevel2()
             circle.isVisible = false  
         end
     end
+end
 
-    if (lives == 0) then
-        YouLose()
+function ResumeLevel2Q2()
+
+    character.isVisible = true
+    character.x = 750
+    character.y = 650
+
+    livesText.text = "Lives: " .. lives
+    AddRuntimeListeners()
+    AddArrowEventListeners()
+    RemoveCollisionListeners()
+
+    if (questionsAnswered > 0) then
+        if (circle ~= nil) and (circle.isBodyActive == true) then
+            physics.removeBody(circle)
+            circle.isVisible = false  
+        end
     end
 end
 
@@ -407,9 +421,9 @@ function scene:create( event )
     sceneGroup:insert( backButton )
 
     character = display.newImageRect("Images/Character1.png", 100, 150)
-    character.x = 655
-    character.y = 650
-    character.width = 150
+    character.x = 700
+    character.y = 700
+    character.width = 100
     character.height = 150
     character.myName = "KickyKat"
     character.isVisible = false
@@ -496,16 +510,21 @@ function scene:create( event )
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( rWall )
 
-    --Insert the right wall
-    lWall = display.newImageRect("Images/Rwall.png", 100, 1024)
-    lWall.x = 10
-    lWall.y = display.contentCenterY
-    lWall.isVisible = false
-
-    -- Insert objects into the scene group in order to ONLY be associated with this scene
-    sceneGroup:insert( lWall )
-
+    --create the circle
+    questionCircle = display.newImageRect("Images/circle.png", 100, 100)
+    questionCircle.x = 350
+    questionCircle.y = 650
+    questionCircle.myName = "questionCircle"
     
+    sceneGroup:insert( questionCircle )
+
+    --create the second circle
+    questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
+    questionCircle2.x = 650
+    questionCircle2.y = 650
+    questionCircle2.myName = "questionCircle2"
+
+    sceneGroup:insert( questionCircle2 )  
     
 end
 
@@ -541,12 +560,9 @@ function scene:show( event )
         -- Example: start timers, begin animation, play audio, etc.
 
         lives = 2
-        print("*** lives = " .. lives)
-        livesText.text = "Lives: " .. lives
         questionsAnswered = 0
 
-        -- make all soccer balls visible
-        ReplaceCircles()
+
 
         -- add physics bodies to each object
         AddPhysicsBodies()
@@ -573,8 +589,7 @@ function scene:hide( event )
     if ( phase == "will" ) then
         -- Called when the scene is on screen (but is about to go off screen).
         -- Insert code here to "pause" the scene.
-        -- Example: stop timers, stop animation, stop audio, etc. 
-        character.isVisible = false       
+        -- Example: stop timers, stop animation, stop audio, etc.        
 
     -----------------------------------------------------------------------------------------
 
@@ -584,7 +599,7 @@ function scene:hide( event )
         -- Example: start timers, begin animation, play audio, etc.    
         RemovePhysicsBodies()
         display.remove(character)
-        RemoveCircles()  
+
         RemoveArrowEventListeners()
         RemoveRuntimeListeners()
         physics.stop()

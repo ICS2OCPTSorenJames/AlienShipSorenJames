@@ -24,6 +24,13 @@ sceneName = "instructions_screen"
 scene = composer.newScene( sceneName ) -- This function doesn't accept a string, only a variable containing a string
 
 -----------------------------------------------------------------------------------------
+-- SOUNDS
+-----------------------------------------------------------------------------------------
+
+local bkgMusic = audio.loadSound("Sounds/InstructionsScreen.mp3")
+local bkgMusicChannel
+
+-----------------------------------------------------------------------------------------
 -- LOCAL VARIABLES
 -----------------------------------------------------------------------------------------
 local bkg_image
@@ -112,6 +119,9 @@ function scene:show( event )
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
+
+        --play the background music
+        bkgMusicChannel = audio.play(bkgMusic)
     end
 
 end -- function scene:show( event )
@@ -139,6 +149,7 @@ function scene:hide( event )
 
     elseif ( phase == "did" ) then
         -- Called immediately after scene goes off screen.
+        audio.stop (bkgMusicChannel)
     end
 
 end --function scene:hide( event )

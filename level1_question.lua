@@ -59,8 +59,8 @@ local Y2 = 650
 local userAnswer
 local textTouched = false
 
-local totalSeconds = 10
-local secondsLeft = 10
+local totalSeconds = 20
+local secondsLeft = 20
 local clockText
 local countDownTimer
 

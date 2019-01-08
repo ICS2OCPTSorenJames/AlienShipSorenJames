@@ -42,6 +42,8 @@ local wrongAnswer1
 local wrongAnswer2
 local wrongAnswer3
 
+local randomOperation
+
 local answerText 
 local wrongAnswerText1
 local wrongAnswerText2
@@ -82,16 +84,6 @@ local incorrectSoundChannel
 --LOCAL FUNCTIONS
 -----------------------------------------------------------------------------------------
 
-
---create the game over image 
-local function GameOver()
-    if (lives == 0) then
-        gameOver = display.newImageRect("Images/gameOver.png", 2048, 1536)
-        gameOverSoundChannel = audio.play(gameOverSound)
-    end
-end
-
-
 --this function counts down the time
 local function UpdateTime()
 
@@ -106,8 +98,9 @@ local function UpdateTime()
         secondsLeft = totalSeconds
         -- decrease life
         lives = lives - 1 
-        -- call game over or ask another question
-        GameOver()
+        composer.hideOverlay("crossFade", 400 )
+        ResumeLevel3()
+
     end       
 end
 
@@ -125,8 +118,8 @@ local function TouchListenerAnswer(touch)
     if (touch.phase == "ended") then
         correctSoundChannel = audio.play(correctSound)
         composer.hideOverlay("crossFade", 400 )
-        questionsAnswered = questionsAnswered + 1 
         ResumeLevel3()
+
     end 
 end
 
@@ -137,9 +130,9 @@ local function TouchListenerWrongAnswer(touch)
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
         lives = lives - 1
-        questionsAnswered = questionsAnswered + 1
         composer.hideOverlay("crossFade", 400 )
-        ResumeLevel3()        
+        ResumeLevel3()
+        
     end 
 end
 
@@ -150,9 +143,9 @@ local function TouchListenerWrongAnswer2(touch)
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
         lives = lives - 1
-        questionsAnswered = questionsAnswered + 1
         composer.hideOverlay("crossFade", 400 )
-        ResumeLevel3()    
+        ResumeLevel3()
+   
     end 
 end
 
@@ -163,9 +156,9 @@ local function TouchListenerWrongAnswer3(touch)
     if (touch.phase == "ended") then
         incorrectSoundChannel = audio.play(incorrectSound)
         lives = lives - 1
-        questionsAnswered = questionsAnswered + 1
         composer.hideOverlay("crossFade", 400 )
-        ResumeLevel3()   
+        ResumeLevel3()
+  
     end 
 end
 
@@ -187,13 +180,14 @@ local function RemoveTextListeners()
 end
 
 local function DisplayQuestion()
-    randomOperation = math.random (1,2)
 
-    if ( randomOperation == 1 ) then
+    randomOperation = math.random(1,3)
+
+    if (randomOperation == 1) then
 
         --creating random numbers
-        firstNumber = math.random (0,20)
-        secondNumber = math.random (0,20)
+        firstNumber = math.random (0,25)
+        secondNumber = math.random (0,25)
 
         -- calculate answer
         answer = firstNumber + secondNumber
@@ -215,21 +209,18 @@ local function DisplayQuestion()
         wrongText2.text = wrongAnswer2
         wrongText3.text = wrongAnswer3
 
-        --start the timer
-        StartTimer()
-
-    elseif ( randomOperation == 2 ) then
+    elseif (randomOperation == 2) then 
         --creating random numbers
-        firstNumber = math.random (0,10)
-        secondNumber = math.random (0,10)
+        firstNumber = math.random (0,15)
+        secondNumber = math.random (0,15)
 
         -- calculate answer
         answer = firstNumber - secondNumber
 
         -- calculate wrong answers
-        wrongAnswer1 = answer - math.random(1, 3)
-        wrongAnswer2 = answer - math.random(4, 6)
-        wrongAnswer3 = answer - math.random(7, 10)
+        wrongAnswer1 = answer + math.random(1, 3)
+        wrongAnswer2 = answer + math.random(4, 6)
+        wrongAnswer3 = answer + math.random(7, 10)
 
 
         --creating the question depending on the selcetion number
@@ -243,8 +234,40 @@ local function DisplayQuestion()
         wrongText2.text = wrongAnswer2
         wrongText3.text = wrongAnswer3
 
-        --start the timer
-        StartTimer()
+        if (firstNumber < secondNumber) then 
+            firstNumber = math.random(10,15)
+            secondNumber = math.random(1,9)
+        end
+
+    elseif(randomOperation == 3) then
+        --creating random numbers
+        firstNumber = math.random (0,10)
+        secondNumber = math.random (0,10)
+
+        -- calculate answer
+        answer = firstNumber * secondNumber
+
+        -- calculate wrong answers
+        wrongAnswer1 = answer + math.random(1, 3)
+        wrongAnswer2 = answer + math.random(4, 6)
+        wrongAnswer3 = answer + math.random(7, 10)
+
+
+        --creating the question depending on the selcetion number
+        questionText.text = firstNumber .. " x " .. secondNumber .. " ="
+
+        --creating answer text from list it corispondes with the animals list
+        answerText.text = answer
+    
+        --creating wrong answers
+        wrongText1.text = wrongAnswer1
+        wrongText2.text = wrongAnswer2
+        wrongText3.text = wrongAnswer3
+
+        if (firstNumber < secondNumber) then 
+            firstNumber = math.random(6,10)
+            secondNumber = math.random(1,5)
+        end
     end
 end
 
