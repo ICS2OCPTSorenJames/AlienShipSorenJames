@@ -165,8 +165,8 @@ local function onCollision( self, event )
 
     if ( event.phase == "began" ) then
 
-        if  (event.target.myName == "questionCircle") then
-
+        if  (event.target.myName == "questionCircle") or
+            (event.target.myName == "questionCircle2") then
             -- get the ball that the user hit
             circle = event.target  
 
@@ -233,35 +233,18 @@ end
 local function ReplaceCircles()
     --create the circle
     questionCircle = display.newImageRect("Images/circle.png", 100, 100)
-    questionCircle.x = 460
-    questionCircle.y = 270
+    questionCircle.x = 350
+    questionCircle.y = 650
     questionCircle.myName = "questionCircle"
     
 
     --create the second circle
     questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
     questionCircle2.x = 650
-    questionCircle2.y = 152
+    questionCircle2.y = 650
     questionCircle2.myName = "questionCircle2"
-
-
 end
 
-
-            -- stop the character from moving
-            motionx = 0
-
-            -- make the character invisible
-            character.isVisible = false
-
-            -- show overlay with math question
-            composer.showOverlay( "level2_question2", { isModal = true, effect = "fade", time = 100})
-                
-            -- Increment questions answered
-            questionsAnswered = questionsAnswered + 1
-        end
-    end
-end
 
 
 local function ReplaceCharacterL2()
@@ -359,6 +342,10 @@ function ResumeLevel2()
             physics.removeBody(circle)
             circle.isVisible = false  
         end
+    end
+    
+    if (lives == 0) then
+        YouLose()
     end
 end
 
@@ -512,16 +499,16 @@ function scene:create( event )
 
     --create the circle
     questionCircle = display.newImageRect("Images/circle.png", 100, 100)
-    questionCircle.x = 350
-    questionCircle.y = 650
+    questionCircle.x = 500
+    questionCircle.y = 275
     questionCircle.myName = "questionCircle"
     
     sceneGroup:insert( questionCircle )
 
     --create the second circle
     questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
-    questionCircle2.x = 650
-    questionCircle2.y = 650
+    questionCircle2.x = 660
+    questionCircle2.y = 150
     questionCircle2.myName = "questionCircle2"
 
     sceneGroup:insert( questionCircle2 )  
