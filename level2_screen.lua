@@ -118,11 +118,6 @@ local function stop (event)
 end
 
 
-local function YouWin()
-    if (questionsAnswered == 2) then 
-        composer.gotoScene( "you_win" )
-    end
-end
 
 local function YouLose()
     composer.gotoScene( "you_lose" )
@@ -169,6 +164,7 @@ local function MakeCirclesVisible()
     end
 end
 
+
 local function onCollision( self, event )
     -- for testing purposes
     --print( event.target )        --the first object in the collision
@@ -207,13 +203,22 @@ local function onCollision( self, event )
             questionsAnswered = questionsAnswered + 1    
         end
     end
+end
+
+local function onCollisionPortal( self, event )
+    -- for testing purposes
+    --print( event.target )        --the first object in the collision
+    --print( event.other )         --the second object in the collision
+    --print( event.selfElement )   --the element (number) of the first object which was hit in the collision
+    --print( event.otherElement )  --the element (number) of the second object which was hit in the collision
+    --print( event.target.myName .. ": collision began with " .. event.other.myName )
 
     if ( event.phase == "began" ) then
 
-        if (event.target.myName == "portal") then
+        if  (event.target.myName == "portal") then 
 
             -- get the circle that the user hit
-            circle = event.target 
+            portal = event.target 
 
 
             -- remove runtime listeners that move the character
@@ -231,7 +236,7 @@ local function onCollision( self, event )
             MakeCirclesInvisible()
 
             -- show overlay with math question
-            composer.gotoScene( "level3_screen" ) 
+            composer.gotoScene("level3_screen")  
         end
     end
 end
@@ -250,6 +255,8 @@ local function ReplaceCircles()
     questionCircle2.x = 650
     questionCircle2.y = 152
     questionCircle2.myName = "questionCircle2"
+
+
 end
 
 local function RemoveCircles()
@@ -315,7 +322,7 @@ function AddCollisionListeners()
     questionCircle:addEventListener( "collision" )
     questionCircle2.collision = onCollision
     questionCircle2:addEventListener( "collision" )
-    portal.collision = onCollision
+    portal.collision = onCollisionPortal
     portal:addEventListener( "collision" )
 end
 
@@ -577,8 +584,7 @@ function scene:hide( event )
         -- Example: start timers, begin animation, play audio, etc.    
         RemovePhysicsBodies()
         display.remove(character)
-        RemoveCircles()
-        
+        RemoveCircles()  
         RemoveArrowEventListeners()
         RemoveRuntimeListeners()
         physics.stop()
