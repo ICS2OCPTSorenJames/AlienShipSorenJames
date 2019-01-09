@@ -1,10 +1,10 @@
 -----------------------------------------------------------------------------------------
 --
--- credits_screen.lua
--- Created by: Your Name
+-- levelSelect_screen.lua
+-- Created by: Soren Drew
 -- Special thanks to Wal Wal for helping in the design of this framework.
--- Date: Month Day, Year
--- Description: This is the credits page, displaying a back button to the main menu.
+-- Date: January 7th 2019
+-- Description: This is the level select page, displaying a back button to the main menu.
 -----------------------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ local widget = require( "widget" )
 -----------------------------------------------------------------------------------------
 
 -- Naming Scene
-sceneName = "credits_screen"
+sceneName = "levelSelect_screen"
 
 -- Creating Scene Object
 scene = composer.newScene( sceneName ) -- This function doesn't accept a string, only a variable containing a string
@@ -27,7 +27,7 @@ scene = composer.newScene( sceneName ) -- This function doesn't accept a string,
 -- SOUNDS
 -----------------------------------------------------------------------------------------
 
-local bkgMusic = audio.loadSound("Sounds/CreditsSound.mp3")
+local bkgMusic = audio.loadSound("Sounds/levelSelect.mp3")
 local bkgMusicChannel
 
 -----------------------------------------------------------------------------------------
@@ -35,6 +35,9 @@ local bkgMusicChannel
 -----------------------------------------------------------------------------------------
 local bkg_image
 local backButton
+local level1Button
+local level2Button
+local level3Button
 
 -----------------------------------------------------------------------------------------
 -- LOCAL FUNCTIONS
@@ -43,6 +46,21 @@ local backButton
 -- Creating Transitioning Function back to main menu
 local function BackTransition( )
     composer.gotoScene( "main_menu", {effect = "fromLeft", time = 1000})
+end
+
+-- Creating Transitioning Function to level 1
+local function Level1Transition( )
+    composer.gotoScene( "level1_screen", {effect = "crossFade", time = 1000})
+end
+
+-- Creating Transitioning Function to level 2
+local function Level2Transition( )
+    composer.gotoScene( "level2_screen", {effect = "crossFade", time = 1000})
+end
+
+-- Creating Transitioning Function to level 3
+local function Level3Transition( )
+    composer.gotoScene( "level3_screen", {effect = "crossFade", time = 1000})
 end
 
 
@@ -61,7 +79,7 @@ function scene:create( event )
     -----------------------------------------------------------------------------------------
 
     -- Insert the background image and set it to the center of the screen
-    bkg_image = display.newImageRect("Images/CreditsScreen.png", display.contentWidth, display.contentHeight)
+    bkg_image = display.newImageRect("Images/background.jfif", display.contentWidth, display.contentHeight)
     bkg_image.x = display.contentCenterX
     bkg_image.y = display.contentCenterY
     bkg_image.width = display.contentWidth
@@ -90,11 +108,68 @@ function scene:create( event )
             -- When the button is released, call the Level1 screen transition function
             onRelease = BackTransition       
         } )
+
+
+    level1Button = widget.newButton( 
+        {   
+            -- Set its position on the screen relative to the screen size
+            x = 200,
+            y = 400,
+            width = 250,
+            height = 290,
+
+            -- Insert the images here
+            defaultFile = "Images/level1Button.png",
+            overFile = "Images/level1Button.png",
+
+            -- When the button is released, call the Level1 screen transition function
+            onRelease = Level1Transition       
+        } )
+
+
+    level2Button = widget.newButton( 
+        {   
+            -- Set its position on the screen relative to the screen size
+            x = 520,
+            y = 400,
+            width = 250,
+            height = 290,
+
+            -- Insert the images here
+            defaultFile = "Images/level2Button.png",
+            overFile = "Images/level2Button.png",
+
+            -- When the button is released, call the Level1 screen transition function
+            onRelease = Level2Transition       
+        } )
+
+
+
+    level3Button = widget.newButton( 
+        {   
+            -- Set its position on the screen relative to the screen size
+            x = 820,
+            y = 400,
+            width = 250,
+            height = 290,
+
+            -- Insert the images here
+            defaultFile = "Images/level3Button.png",
+            overFile = "Images/level3Button.png",
+
+            -- When the button is released, call the Level1 screen transition function
+            onRelease = Level3Transition       
+        } )
+
+
  -----------------------------------------------------------------------------------------
 
     -- Associating Buttons with this scene
     sceneGroup:insert( backButton )
-    
+    sceneGroup:insert( level1Button )
+    sceneGroup:insert( level2Button )
+    sceneGroup:insert( level3Button )
+   
 end --function scene:create( event )
 
 -----------------------------------------------------------------------------------------
