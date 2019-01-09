@@ -174,11 +174,11 @@ end
 
 local function DisplayQuestion()
     --creating random numbers
-    firstNumber = math.random (0,15)
-    secondNumber = math.random (0,15)
+    firstNumber = math.random (1,7)
+    secondNumber = math.random (1,7)
 
     -- calculate answer
-    answer = firstNumber + secondNumber
+    answer = firstNumber * secondNumber
 
     -- calculate wrong answers
     wrongAnswer1 = answer + math.random(1, 3)
@@ -187,7 +187,8 @@ local function DisplayQuestion()
 
 
     --creating the question depending on the selcetion number
-    questionText.text = firstNumber .. " + " .. secondNumber .. " ="
+    questionText.text = firstNumber .. " x " .. secondNumber .. " ="
+
 
     --creating answer text from list it corispondes with the animals list
     answerText.text = answer

@@ -123,11 +123,6 @@ local function MakeCirclesVisible()
     questionCircle2.isVisible = true
 end
 
-local function YouWin()
-    if (questionsAnswered == 2) then 
-        composer.gotoScene( "you_win" )
-    end
-end
 
 local function YouLose()
     if (lives == 0) then 
@@ -159,6 +154,7 @@ local function RemoveRuntimeListeners()
 end
 
 
+
 local function onCollision( self, event )
     -- for testing purposes
     --print( event.target )        --the first object in the collision
@@ -169,8 +165,8 @@ local function onCollision( self, event )
 
     if ( event.phase == "began" ) then
 
-        if  (event.target.myName == "questionCircle") then
-
+        if  (event.target.myName == "questionCircle") or
+            (event.target.myName == "questionCircle2") then
             -- get the ball that the user hit
             circle = event.target  
 
@@ -191,25 +187,23 @@ local function onCollision( self, event )
             composer.showOverlay( "level2_question", { isModal = true, effect = "fade", time = 100})
 
             -- Increment questions answered
-<<<<<<< HEAD
-            questionsAnswered = questionsAnswered + 1
 
-        elseif (event.target.myName == "questionCircle2") then
-
-            -- remove runtime listeners that move the character
-            RemoveArrowEventListeners()
-            RemoveRuntimeListeners()
-
-                -- remove the character from the display
-                --display.remove(character)
-=======
             questionsAnswered = questionsAnswered + 1    
         end
     end
+end
+
+local function onCollisionPortal( self, event )
+    -- for testing purposes
+    --print( event.target )        --the first object in the collision
+    --print( event.other )         --the second object in the collision
+    --print( event.selfElement )   --the element (number) of the first object which was hit in the collision
+    --print( event.otherElement )  --the element (number) of the second object which was hit in the collision
+    --print( event.target.myName .. ": collision began with " .. event.other.myName )
 
     if ( event.phase == "began" ) then
 
-        if (event.target.myName == "portal") then
+        if  (event.target.myName == "portal") then 
 
             -- get the circle that the user hit
             circle = event.target 
@@ -227,10 +221,10 @@ local function onCollision( self, event )
 
             -- make the character invisible
             character.isVisible = false
-            MakeCirclesInvisible()
+            
 
             -- show overlay with math question
-            composer.gotoScene( "level3_screen" ) 
+            composer.gotoScene("level3_screen")  
         end
     end
 end
@@ -239,47 +233,32 @@ end
 local function ReplaceCircles()
     --create the circle
     questionCircle = display.newImageRect("Images/circle.png", 100, 100)
-    questionCircle.x = 460
-    questionCircle.y = 270
+    questionCircle.x = 350
+    questionCircle.y = 650
     questionCircle.myName = "questionCircle"
     
 
     --create the second circle
     questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
     questionCircle2.x = 650
-    questionCircle2.y = 152
+    questionCircle2.y = 650
     questionCircle2.myName = "questionCircle2"
 end
->>>>>>> dc682210d67df40359669d2d671975e7a7dbb398
 
-            -- stop the character from moving
-            motionx = 0
-
-            -- make the character invisible
-            character.isVisible = false
-
-            -- show overlay with math question
-            composer.showOverlay( "level2_question2", { isModal = true, effect = "fade", time = 100})
-                
-            -- Increment questions answered
-            questionsAnswered = questionsAnswered + 1
-        end
-    end
+local function RemoveCircles()
+    display.remove(questionCircle)
+    display.remove(questionCircle2)
+    display.remove(portal)
 end
-
 
 local function ReplaceCharacterL2()
     character = display.newImageRect("Images/Character1.png", 100, 150)
     character.x = 100
-<<<<<<< HEAD
-    character.y = 650
-    character.width = 75
-    character.height = 100
-=======
+
     character.y = 20
     character.width = 150
     character.height = 150
->>>>>>> dc682210d67df40359669d2d671975e7a7dbb398
+
     character.myName = "KickyKat"
 
     -- intialize horizontal movement of character
@@ -327,7 +306,7 @@ function AddCollisionListeners()
     questionCircle:addEventListener( "collision" )
     questionCircle2.collision = onCollision
     questionCircle2:addEventListener( "collision" )
-    portal.collision = onCollision
+    portal.collision = onCollisionPortal
     portal:addEventListener( "collision" )
 end
 
@@ -351,13 +330,10 @@ end
 function ResumeLevel2()
 
     character.isVisible = true
-<<<<<<< HEAD
-    character.x = 550
-    character.y = 650
-=======
+
     --character.x = 510
     --character.y = 650
->>>>>>> dc682210d67df40359669d2d671975e7a7dbb398
+
 
     print ("***lives = " .. lives)
 
@@ -370,6 +346,10 @@ function ResumeLevel2()
             physics.removeBody(circle)
             circle.isVisible = false  
         end
+    end
+    
+    if (lives == 0) then
+        YouLose()
     end
 end
 
@@ -459,14 +439,17 @@ function scene:create( event )
     portal = display.newImageRect("Images/Portal.png", 130, 130)
     portal.x = display.contentWidth * 9 / 10
     portal.y = 500
+    portal.myName = "portal"
+
+    -- Insert objects into the scene group in order to ONLY be associated with this scene
+    sceneGroup:insert( portal )
 
     --Insert the right arrow
     lArrow = display.newImageRect("Images/LeftArrowUnpressed.png", 100, 50)
     lArrow.x = display.contentWidth * 7.7 / 10
     lArrow.y = 680
 
-    -- Insert objects into the scene group in order to ONLY be associated with this scene
-    sceneGroup:insert( portal )
+ 
    
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( lArrow )
@@ -523,16 +506,16 @@ function scene:create( event )
 
     --create the circle
     questionCircle = display.newImageRect("Images/circle.png", 100, 100)
-    questionCircle.x = 350
-    questionCircle.y = 650
+    questionCircle.x = 500
+    questionCircle.y = 275
     questionCircle.myName = "questionCircle"
     
     sceneGroup:insert( questionCircle )
 
     --create the second circle
     questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
-    questionCircle2.x = 650
-    questionCircle2.y = 650
+    questionCircle2.x = 660
+    questionCircle2.y = 150
     questionCircle2.myName = "questionCircle2"
 
     sceneGroup:insert( questionCircle2 )  
@@ -610,7 +593,8 @@ function scene:hide( event )
         -- Example: start timers, begin animation, play audio, etc.    
         RemovePhysicsBodies()
         display.remove(character)
-        
+        RemoveCircles()
+
         RemoveArrowEventListeners()
         RemoveRuntimeListeners()
         physics.stop()
