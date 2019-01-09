@@ -238,7 +238,7 @@ local function onCollisionPortal( self, event )
             MakeCirclesInvisible()
 
             -- go to next level
-            composer.gotoScene( "level3_screen" )   
+            composer.gotoScene( "level2_screen" )   
         end
     end
 end

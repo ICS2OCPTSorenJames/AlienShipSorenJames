@@ -206,7 +206,7 @@ local function onCollisionPortal( self, event )
         if  (event.target.myName == "portal") then 
 
             -- get the circle that the user hit
-            portal = event.target 
+            circle = event.target 
 
 
             -- remove runtime listeners that move the character
@@ -221,7 +221,7 @@ local function onCollisionPortal( self, event )
 
             -- make the character invisible
             character.isVisible = false
-            MakeCirclesInvisible()
+            
 
             -- show overlay with math question
             composer.gotoScene("level3_screen")  
@@ -245,7 +245,11 @@ local function ReplaceCircles()
     questionCircle2.myName = "questionCircle2"
 end
 
-
+local function RemoveCircles()
+    display.remove(questionCircle)
+    display.remove(questionCircle2)
+    display.remove(portal)
+end
 
 local function ReplaceCharacterL2()
     character = display.newImageRect("Images/Character1.png", 100, 150)
@@ -435,14 +439,17 @@ function scene:create( event )
     portal = display.newImageRect("Images/Portal.png", 130, 130)
     portal.x = display.contentWidth * 9 / 10
     portal.y = 500
+    portal.myName = "portal"
+
+    -- Insert objects into the scene group in order to ONLY be associated with this scene
+    sceneGroup:insert( portal )
 
     --Insert the right arrow
     lArrow = display.newImageRect("Images/LeftArrowUnpressed.png", 100, 50)
     lArrow.x = display.contentWidth * 7.7 / 10
     lArrow.y = 680
 
-    -- Insert objects into the scene group in order to ONLY be associated with this scene
-    sceneGroup:insert( portal )
+ 
    
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( lArrow )
@@ -586,6 +593,7 @@ function scene:hide( event )
         -- Example: start timers, begin animation, play audio, etc.    
         RemovePhysicsBodies()
         display.remove(character)
+        RemoveCircles()
 
         RemoveArrowEventListeners()
         RemoveRuntimeListeners()
