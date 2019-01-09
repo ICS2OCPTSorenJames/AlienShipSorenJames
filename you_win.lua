@@ -25,18 +25,27 @@ sceneName = "you_win"
 local scene = composer.newScene( sceneName )
 
 -----------------------------------------------------------------------------------------
--- FORWARD REFERENCES
+-- SOUNDS
+-----------------------------------------------------------------------------------------
+
+local bkgMusic = audio.loadSound("Sounds/youWin.mp3")
+local bkgMusicChannel
+
+-----------------------------------------------------------------------------------------
+-- LOCAL VARIABLES
 -----------------------------------------------------------------------------------------
 
 -- local variables for the scene
 local bkg
-
-----------------------------------------------------------------------------------------
------------------------------------------------------------------------------------------
--- LOCAL FUNCTIONS
------------------------------------------------------------------------------------------
+local backButton
 
 --------------------------------------------------------------------------------------
+
+-- Creating Transitioning Function back to main menu
+local function BackTransition( )
+    composer.gotoScene( "main_menu", {effect = "fromLeft", time = 1000})
+end
+
 -- The function called when the screen doesn't exist
 function scene:create( event )
 
@@ -49,16 +58,27 @@ function scene:create( event )
     bkg.y = display.contentCenterY
     bkg.width = display.contentWidth
     bkg.height = display.contentHeight
+
+
+    backButton = widget.newButton( 
+        {   
+            -- Set its position on the screen relative to the screen size
+            x = display.contentWidth*1/8,
+            y = display.contentHeight*1/8,
+            width = 180,
+            height = 100,
+
+            -- Insert the images here
+            defaultFile = "Images/backButtonUnpressed.png",
+            overFile = "Images/backButtonPressed.png",
+
+            -- When the button is released, call the Level1 screen transition function
+            onRelease = BackTransition       
+        } )
    
     -- Associating display objects with this scene 
     sceneGroup:insert( bkg )
-    -----------------------------------------------------------------------------------------
-    -- SOUNDS
-    -----------------------------------------------------------------------------------------
-    --[[local youWinSound = audio.loadSound("Sounds/Cheer.m4a")
-    local youWinSoundChannel
-
-    youWinSoundChannel = audio.play(youWinSound)]] 
+    sceneGroup:insert( backButton )
 end    
 
 -----------------------------------------------------------------------------------------
@@ -89,6 +109,7 @@ function scene:show( event )
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
+        bkgMusicChannel = audio.play(bkgMusic)
     end
 
 end
@@ -116,6 +137,7 @@ function scene:hide( event )
 
     elseif ( phase == "did" ) then
         -- Called immediately after scene goes off screen.
+        audio.stop(bkgMusicChannel)
     end
 
 end

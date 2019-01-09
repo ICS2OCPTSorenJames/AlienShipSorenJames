@@ -25,7 +25,15 @@ sceneName = "you_lose"
 local scene = composer.newScene( sceneName )
 
 -----------------------------------------------------------------------------------------
--- FORWARD REFERENCES
+-- SOUNDS
+-----------------------------------------------------------------------------------------
+
+local bkgMusic = audio.loadSound("Sounds/youLose.mp3")
+local bkgMusicChannel
+
+
+-----------------------------------------------------------------------------------------
+-- LOCAL VARIABLES
 -----------------------------------------------------------------------------------------
 
 -- local variables for the scene
@@ -78,13 +86,6 @@ function scene:create( event )
 
     -- Associating Buttons with this scene
     sceneGroup:insert( backButton )
-    -----------------------------------------------------------------------------------------
-    -- SOUNDS
-    -----------------------------------------------------------------------------------------
-    --[[local youWinSound = audio.loadSound("Sounds/Cheer.m4a")
-    local youWinSoundChannel
-
-    youWinSoundChannel = audio.play(youWinSound)]] 
 end    
 
 -----------------------------------------------------------------------------------------
@@ -115,6 +116,7 @@ function scene:show( event )
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
+        bkgMusicChannel = audio.play(bkgMusic)
     end
 
 end
@@ -142,6 +144,7 @@ function scene:hide( event )
 
     elseif ( phase == "did" ) then
         -- Called immediately after scene goes off screen.
+        audio.stop(bkgMusicChannel)
     end
 
 end
