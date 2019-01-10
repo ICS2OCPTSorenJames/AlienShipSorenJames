@@ -291,9 +291,7 @@ local function ReplaceCircles()
     questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
     questionCircle2.x = 770
     questionCircle2.y = 400
-    questionCircle2.myName = "questionCircle2"
-
-     
+    questionCircle2.myName = "questionCircle2"    
 end
 
 local function ReplaceCharacterL3()
@@ -375,7 +373,6 @@ end
 local function BackTransition( )
     composer.gotoScene( "main_menu", {effect = "fromLeft", time = 1000})
 end
-
 
 -----------------------------------------------------------------------------------------
 -- GLOBAL FUNCTIONS
@@ -637,8 +634,6 @@ function scene:hide( event )
         RemoveArrowEventListeners()
         RemoveRuntimeListeners()
         physics.stop()
-
-
     end
 
 end --function scene:hide( event )
