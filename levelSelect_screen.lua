@@ -27,7 +27,7 @@ scene = composer.newScene( sceneName ) -- This function doesn't accept a string,
 -- SOUNDS
 -----------------------------------------------------------------------------------------
 
-local bkgMusic = audio.loadSound("Sounds/levelSelect.mp3")
+local bkgMusic = audio.loadSound("Sounds/levelSelectSound.mp3")
 local bkgMusicChannel
 
 -----------------------------------------------------------------------------------------

@@ -73,7 +73,6 @@ local function LevelSelectTransition( )
     composer.gotoScene( "levelSelect_screen", {effect = "fromLeft", time = 1000})
 end 
 
-
 -----------------------------------------------------------------------------------------
 -- GLOBAL SCENE FUNCTIONS
 -----------------------------------------------------------------------------------------

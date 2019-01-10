@@ -18,7 +18,6 @@ local widget = require( "widget" )
 local physics = require("physics")
 
 physics.start()
-
 -----------------------------------------------------------------------------------------
 
 -- Naming Scene
@@ -84,6 +83,9 @@ local startPlatform
 
 local gameOverSound = audio.loadSound( "Sounds/booSound.mp3" )
 local gameOverSoundChannel
+
+local bkgMusic = audio.loadSound("Sounds/level3Music.mp3")
+local bkgMusicChannel
 
 -----------------------------------------------------------------------------------------
 -- LOCAL FUNCTIONS
@@ -238,11 +240,12 @@ local function onCollisionPortal( self, event )
             character.isVisible = false
             MakeCirclesInvisible()
 
-            -- show overlay with math question
+            -- go to you win screen
             composer.gotoScene( "you_win" )   
         end
     end
 end
+
 
 
 local function onCollisionFloor( self, event )
@@ -266,14 +269,12 @@ local function onCollisionFloor( self, event )
             RemoveRuntimeListeners()
 
             -- remove the character from the display
-            --display.remove(character)
+            display.remove(character)
 
             -- stop the character from moving
             motionx = 0
 
-            -- make the character invisible
-            character.isVisible = false
-            MakeCirclesInvisible()  
+            composer.gotoScene( "you_lose" ) 
         end
     end
 end
@@ -290,11 +291,11 @@ local function ReplaceCircles()
     questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
     questionCircle2.x = 770
     questionCircle2.y = 400
-    questionCircle2.myName = "questionCircle2"
+    questionCircle2.myName = "questionCircle2"    
 end
 
 local function ReplaceCharacterL3()
-    character = display.newImageRect("Images/Character2.png", 100, 150)
+    character = display.newImageRect("Images/Character5.png", 150, 150)
     character.x = 100
     character.y = 100
     character.width = 150
@@ -349,7 +350,6 @@ local function RemovePhysicsBodies()
     physics.removeBody(startPlatform)
 end
 
---add collision to the first circle
 function AddCollisionListeners()
     --if they hit the circle on collision will be called
     questionCircle.collision = onCollision
@@ -362,7 +362,6 @@ function AddCollisionListeners()
     floor:addEventListener( "collision" )
 end
 
---remove collision to the first circle
 function RemoveCollisionListeners()
     questionCircle:removeEventListener( "collision" )
     questionCircle2:removeEventListener( "collision" )
@@ -374,7 +373,6 @@ end
 local function BackTransition( )
     composer.gotoScene( "main_menu", {effect = "fromLeft", time = 1000})
 end
-
 
 -----------------------------------------------------------------------------------------
 -- GLOBAL FUNCTIONS
@@ -443,7 +441,7 @@ function scene:create( event )
 
     sceneGroup:insert( backButton )
 
-    character = display.newImageRect("Images/Character2.png", 100, 150)
+    character = display.newImageRect("Images/Character5.png", 100, 150)
     character.x = 655
     character.y = 650
     character.width = 150
@@ -541,14 +539,17 @@ function scene:create( event )
     floor.isVisible = true
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
-    sceneGroup:insert( floor )
+    sceneGroup:insert( floor ) 
 
+    --create the portal to next level
     portal = display.newImageRect("Images/Portal.png", 150, 150)
     portal.x = 940
     portal.y = 270
     portal.myName = "portal"
 
-    sceneGroup:insert( portal )   
+    -- Insert objects into the scene group in order to ONLY be associated with this scene
+    sceneGroup:insert( portal )  
+      
 end
 
 
@@ -598,6 +599,8 @@ function scene:show( event )
 
         -- create the character, add physics bodies and runtime listeners
         ReplaceCharacterL3()
+
+        bkgMusicChannel = audio.play(bkgMusic)
     end
 end --function scene:show( event )
     
@@ -631,7 +634,6 @@ function scene:hide( event )
         RemoveArrowEventListeners()
         RemoveRuntimeListeners()
         physics.stop()
-
     end
 
 end --function scene:hide( event )

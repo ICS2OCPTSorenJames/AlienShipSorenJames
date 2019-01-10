@@ -50,7 +50,6 @@ local backButton
 
 local circle
 
-local character
 
 local rArrow 
 local uArrow
@@ -71,6 +70,8 @@ local floor
 local ceiling
 local rWall
 local lWall
+
+local character
 
 -----------------------------------------------------------------------------------------
 -- SOUNDS
@@ -253,12 +254,11 @@ local function ReplaceCircles()
     questionCircle.y = 650
     questionCircle.myName = "questionCircle"
     
-
     --create the second circle
     questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
     questionCircle2.x = 650
     questionCircle2.y = 650
-    questionCircle2.myName = "questionCircle2"
+    questionCircle2.myName = "questionCircle2"  
 end
 
 local function RemoveCircles()
@@ -291,6 +291,7 @@ local function ReplaceCharacterL1()
     AddRuntimeListeners()
 end
 
+
 local function AddPhysicsBodies()
 
     print ("***AddPhysicsBodies called")
@@ -308,10 +309,13 @@ local function RemovePhysicsBodies()
     --physics.removeBody(questionCircle)
     --physics.removeBody(questionCircle2)
     physics.removeBody(portal)
+
+
     physics.removeBody(floor)
     physics.removeBody(ceiling)
     physics.removeBody(rWall)
     physics.removeBody(lWall)
+    physics.removeBody(portal)
 end
 
 --add collision to the first circle
@@ -480,12 +484,14 @@ function scene:create( event )
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( lWall )
 
+    --create the portal to the next level
     portal = display.newImageRect("Images/Portal.png", 150, 150)
     portal.x = 940
     portal.y = 520
     portal.myName = "portal"
 
-    sceneGroup:insert( portal )   
+    sceneGroup:insert( portal )
+ 
 end
 
 
