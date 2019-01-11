@@ -321,7 +321,6 @@ end
 local function RemoveCircles()
     display.remove(questionCircle)
     display.remove(questionCircle2)
-    display.remove(portal)
 end
 
 
@@ -630,6 +629,7 @@ function scene:hide( event )
         RemovePhysicsBodies()
         display.remove(character)
         RemoveCircles()
+        audio.stop (bkgMusicChannel)
         
         RemoveArrowEventListeners()
         RemoveRuntimeListeners()

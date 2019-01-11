@@ -16,6 +16,7 @@ local composer = require( "composer" )
 local widget = require( "widget" )
 local physics = require( "physics")
 
+math.randomseed( os.time() )
 
 -----------------------------------------------------------------------------------------
 
@@ -162,7 +163,6 @@ local function TouchListenerWrongAnswer3(touch)
     end 
 end
 
-
 --adding the event listeners 
 local function AddTextListeners()
     answerText:addEventListener( "touch", TouchListenerAnswer )
@@ -193,7 +193,7 @@ local function DisplayQuestion()
         answer = firstNumber + secondNumber
 
         -- calculate wrong answers
-        wrongAnswer1 = answer + math.random(1, 3)
+        wrongAnswer1 = answer - math.random(1, 3)
         wrongAnswer2 = answer + math.random(4, 6)
         wrongAnswer3 = answer + math.random(7, 10)
 
