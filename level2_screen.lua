@@ -119,10 +119,23 @@ local function stop (event)
 end
 
 local function MakeCirclesVisible()
-    questionCircle.isVisible = true
-    questionCircle2.isVisible = true
-    portal.isVisible = true
+    if (questionsAnswered == 0) then
+        questionCircle.isVisible = true
+        questionCircle2.isVisible = true
+    elseif (questionsAnswered == 1) then
+        questionCircle.isVisible = false   
+        questionCircle2.isVisible = true
+    elseif (questionsAnswered == 2) then
+        questionCircle.isVisible = false    
+        questionCircle2.isVisible = false
+    end
 end
+
+local function MakeCirclesInvisible()    
+    questionCircle.isVisible = false    
+    questionCircle2.isVisible = false
+end
+
 
 
 local function YouLose()
@@ -168,8 +181,13 @@ local function onCollision( self, event )
 
         if  (event.target.myName == "questionCircle") or
             (event.target.myName == "questionCircle2") then
+
+            print("**collided with circle")
             -- get the ball that the user hit
-            circle = event.target  
+            circle = event.target 
+
+            MakeCirclesInvisible()
+
 
             -- remove runtime listeners that move the character
             RemoveArrowEventListeners()
@@ -234,21 +252,21 @@ end
 local function ReplaceCircles()
     --create the circle
     questionCircle = display.newImageRect("Images/circle.png", 100, 100)
-    questionCircle.x = 350
-    questionCircle.y = 650
+    questionCircle.x = 500
+    questionCircle.y = 275
     questionCircle.myName = "questionCircle"
     
 
     --create the second circle
     questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
-    questionCircle2.x = 650
-    questionCircle2.y = 650
-    questionCircle2.myName = "questionCircle2"
+    questionCircle2.x = 660
+    questionCircle2.y = 150
+    questionCircle2.myName = "questionCircle2"  
 end
 
 local function RemoveCircles()
-    --display.remove(questionCircle)
-    --display.remove(questionCircle2)
+    display.remove(questionCircle)
+    display.remove(questionCircle2)
     --display.remove(portal)
 end
 
@@ -291,8 +309,8 @@ local function AddPhysicsBodies()
 end
 
 local function RemovePhysicsBodies()
-    physics.removeBody(questionCircle)
-    physics.removeBody(questionCircle2)
+    --physics.removeBody(questionCircle)
+    --physics.removeBody(questionCircle2)
     physics.removeBody(portal)
     physics.removeBody(floor)
     physics.removeBody(floor2)
@@ -336,7 +354,7 @@ function ResumeLevel2()
     --character.x = 510
     --character.y = 650
 
-
+    MakeCirclesVisible()
     print ("***lives = " .. lives)
 
     livesText.text = "Lives: " .. lives
@@ -352,25 +370,6 @@ function ResumeLevel2()
     
     if (lives == 0) then
         YouLose()
-    end
-end
-
-function ResumeLevel2Q2()
-
-    character.isVisible = true
-    character.x = 750
-    character.y = 650
-
-    livesText.text = "Lives: " .. lives
-    AddRuntimeListeners()
-    AddArrowEventListeners()
-    RemoveCollisionListeners()
-
-    if (questionsAnswered > 0) then
-        if (circle ~= nil) and (circle.isBodyActive == true) then
-            physics.removeBody(circle)
-            circle.isVisible = false  
-        end
     end
 end
 
@@ -505,23 +504,9 @@ function scene:create( event )
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( rWall )
+--
 
-    --create the circle
-    questionCircle = display.newImageRect("Images/circle.png", 100, 100)
-    questionCircle.x = 500
-    questionCircle.y = 275
-    questionCircle.myName = "questionCircle"
-    
-    sceneGroup:insert( questionCircle )
 
-    --create the second circle
-    questionCircle2 = display.newImageRect("Images/circle.png", 100, 100)
-    questionCircle2.x = 660
-    questionCircle2.y = 150
-    questionCircle2.myName = "questionCircle2"
-
-    sceneGroup:insert( questionCircle2 )  
-    
 end
 
 
@@ -545,6 +530,8 @@ function scene:show( event )
     
         -- start physics
         physics.start()
+        ReplaceCircles()
+        
 
         -- set gravity
         physics.setGravity( 0, GRAVITY )
@@ -557,8 +544,8 @@ function scene:show( event )
 
         lives = 2
         questionsAnswered = 0
-
-
+        portal.isVisible = true
+        
 
         -- add physics bodies to each object
         AddPhysicsBodies()
@@ -568,6 +555,7 @@ function scene:show( event )
 
         -- create the character, add physics bodies and runtime listeners
         ReplaceCharacterL2()
+
     end
 end --function scene:show( event )
     
@@ -585,7 +573,14 @@ function scene:hide( event )
     if ( phase == "will" ) then
         -- Called when the scene is on screen (but is about to go off screen).
         -- Insert code here to "pause" the scene.
-        -- Example: stop timers, stop animation, stop audio, etc.        
+        -- Example: stop timers, stop animation, stop audio, etc.   
+        display.remove(character) 
+        RemovePhysicsBodies()        
+        RemoveCircles()
+        RemoveArrowEventListeners()
+        RemoveRuntimeListeners()
+        physics.stop() 
+        MakeCirclesInvisible()   
             
     -----------------------------------------------------------------------------------------
 
@@ -593,13 +588,7 @@ function scene:hide( event )
         -- Called immediately after scene goes off screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.    
-        RemovePhysicsBodies()
-        display.remove(character)
-        RemoveCircles()
-
-        RemoveArrowEventListeners()
-        RemoveRuntimeListeners()
-        physics.stop()
+        
 
     end
 

@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------------
 --
 -- level1_screen.lua
--- Created by: Soren Drew
--- Description: This is the level 1 screen of the game. the charater can be dragged to move
+-- Created by: James
+-- Description: This is the level 2 screen of the game. the charater can be dragged to move
 --If character goes off a certain araea they go back to the start. When a user interactes
 --with piant a trivia question will come up. they will have a limided time to click on the answer
 -----------------------------------------------------------------------------------------
@@ -96,8 +96,9 @@ local function UpdateTime()
         secondsLeft = totalSeconds
         -- decrease life
         lives = lives - 1 
-        -- call game over or ask another question
-        GameOver()
+        composer.hideOverlay("crossFade", 400 )
+        print("***called ResumeLevel2")
+        ResumeLevel2()
     end       
 end
 
@@ -174,21 +175,20 @@ end
 
 local function DisplayQuestion()
     --creating random numbers
-    firstNumber = math.random (1,7)
-    secondNumber = math.random (1,7)
+    firstNumber = math.random (3,6)
+    secondNumber = math.random (7,10)
 
     -- calculate answer
     answer = firstNumber * secondNumber
 
     -- calculate wrong answers
-    wrongAnswer1 = answer + math.random(1, 3)
+    wrongAnswer1 = answer + math.random(1, 2)
     wrongAnswer2 = answer + math.random(4, 6)
     wrongAnswer3 = answer + math.random(7, 10)
 
 
     --creating the question depending on the selcetion number
     questionText.text = firstNumber .. " x " .. secondNumber .. " ="
-
 
     --creating answer text from list it corispondes with the animals list
     answerText.text = answer
@@ -338,9 +338,11 @@ function scene:show( event )
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
+        print("***Restarting level2_question")
         DisplayQuestion()
         PositionAnswers()
         AddTextListeners()
+        print("*###############**Calling StartTimer")
         StartTimer()        
     end
 

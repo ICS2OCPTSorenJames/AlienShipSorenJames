@@ -309,8 +309,6 @@ local function RemovePhysicsBodies()
     --physics.removeBody(questionCircle)
     --physics.removeBody(questionCircle2)
     physics.removeBody(portal)
-
-
     physics.removeBody(floor)
     physics.removeBody(ceiling)
     physics.removeBody(rWall)
@@ -529,7 +527,6 @@ function scene:show( event )
 
         lives = 2
         portal.isVisible = true
-        print("*** lives = " .. lives)
         livesText.text = "Lives: " .. lives
         questionsAnswered = 0
 
