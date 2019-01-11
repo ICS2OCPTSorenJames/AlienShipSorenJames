@@ -264,10 +264,6 @@ end
 local function RemoveCircles()
     display.remove(questionCircle)
     display.remove(questionCircle2)
-<<<<<<< HEAD
-=======
-    --display.remove(portal)
->>>>>>> 90fce72dd1f8b9c8ce3b9ed6749ecad50880091d
 end
 
 local function ReplaceCharacterL1()
