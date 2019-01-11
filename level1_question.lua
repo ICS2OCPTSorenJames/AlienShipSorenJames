@@ -16,6 +16,7 @@ local composer = require( "composer" )
 local widget = require( "widget" )
 local physics = require( "physics")
 
+math.randomseed( os.time() )
 
 -----------------------------------------------------------------------------------------
 

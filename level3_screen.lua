@@ -629,6 +629,7 @@ function scene:hide( event )
         RemovePhysicsBodies()
         display.remove(character)
         RemoveCircles()
+        audio.stop (bkgMusicChannel)
         
         RemoveArrowEventListeners()
         RemoveRuntimeListeners()
