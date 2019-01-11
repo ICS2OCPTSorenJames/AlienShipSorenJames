@@ -121,6 +121,7 @@ end
 local function MakeCirclesVisible()
     questionCircle.isVisible = true
     questionCircle2.isVisible = true
+    portal.isVisible = true
 end
 
 
@@ -246,9 +247,9 @@ local function ReplaceCircles()
 end
 
 local function RemoveCircles()
-    display.remove(questionCircle)
-    display.remove(questionCircle2)
-    display.remove(portal)
+    --display.remove(questionCircle)
+    --display.remove(questionCircle2)
+    --display.remove(portal)
 end
 
 local function ReplaceCharacterL2()
@@ -290,8 +291,9 @@ local function AddPhysicsBodies()
 end
 
 local function RemovePhysicsBodies()
-    --physics.removeBody(questionCircle)
-    --physics.removeBody(questionCircle2)
+    physics.removeBody(questionCircle)
+    physics.removeBody(questionCircle2)
+    physics.removeBody(portal)
     physics.removeBody(floor)
     physics.removeBody(floor2)
     physics.removeBody(floor3)
@@ -584,7 +586,7 @@ function scene:hide( event )
         -- Called when the scene is on screen (but is about to go off screen).
         -- Insert code here to "pause" the scene.
         -- Example: stop timers, stop animation, stop audio, etc.        
-
+            
     -----------------------------------------------------------------------------------------
 
     elseif ( phase == "did" ) then
