@@ -193,7 +193,7 @@ local function DisplayQuestion()
         answer = firstNumber + secondNumber
 
         -- calculate wrong answers
-        wrongAnswer1 = answer + math.random(1, 3)
+        wrongAnswer1 = answer - math.random(1, 3)
         wrongAnswer2 = answer + math.random(4, 6)
         wrongAnswer3 = answer + math.random(7, 10)
 
