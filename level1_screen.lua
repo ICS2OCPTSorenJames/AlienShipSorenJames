@@ -80,6 +80,9 @@ local character
 local gameOverSound = audio.loadSound( "Sounds/booSound.mp3" )
 local gameOverSoundChannel
 
+local bkgMusic = audio.loadSound("Sounds/level1sound.wav")
+local bkgMusicChannel
+
 -----------------------------------------------------------------------------------------
 -- LOCAL FUNCTIONS
 -----------------------------------------------------------------------------------------
@@ -261,6 +264,10 @@ end
 local function RemoveCircles()
     display.remove(questionCircle)
     display.remove(questionCircle2)
+<<<<<<< HEAD
+=======
+    --display.remove(portal)
+>>>>>>> 90fce72dd1f8b9c8ce3b9ed6749ecad50880091d
 end
 
 local function ReplaceCharacterL1()
@@ -289,6 +296,8 @@ end
 
 
 local function AddPhysicsBodies()
+
+    print ("***AddPhysicsBodies called")
     --add to the physics engine
     physics.addBody (questionCircle, "static", {density=0, friction=0, bounce=0} )
     physics.addBody (questionCircle2, "static", {density=0, friction=0, bounce=0} )
@@ -300,6 +309,11 @@ local function AddPhysicsBodies()
 end
 
 local function RemovePhysicsBodies()
+    --physics.removeBody(questionCircle)
+    --physics.removeBody(questionCircle2)
+    physics.removeBody(portal)
+
+
     physics.removeBody(floor)
     physics.removeBody(ceiling)
     physics.removeBody(rWall)
@@ -514,7 +528,10 @@ function scene:show( event )
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
 
+        bkgMusicChannel = audio.play(bkgMusic, { channel = 1, loops = -1 } )
+
         lives = 2
+        portal.isVisible = true
         print("*** lives = " .. lives)
         livesText.text = "Lives: " .. lives
         questionsAnswered = 0
@@ -548,17 +565,20 @@ function scene:hide( event )
         -- Called when the scene is on screen (but is about to go off screen).
         -- Insert code here to "pause" the scene.
         -- Example: stop timers, stop animation, stop audio, etc. 
-        character.isVisible = false       
+        character.isVisible = false   
+        RemoveCircles()    
 
     -----------------------------------------------------------------------------------------
 
     elseif ( phase == "did" ) then
         -- Called immediately after scene goes off screen.
         -- Insert code here to make the scene come alive.
-        -- Example: start timers, begin animation, play audio, etc.    
+        -- Example: start timers, begin animation, play audio, etc.  
+        audio.stop (bkgMusicChannel)
+
         RemovePhysicsBodies()
         display.remove(character)
-        RemoveCircles()
+        
         
         RemoveArrowEventListeners()
         RemoveRuntimeListeners()
