@@ -18,7 +18,7 @@ sceneName = "splash_screen"
 display.setStatusBar(display.HiddenStatusBar)
 
 -- Create Scene Object
-local scene = composer.newScene( splash_screen2 )
+local scene = composer.newScene( sceneName )
 
 ----------------------------------------------------------------------------------------
 -- SOUNDS
@@ -57,8 +57,7 @@ local function MoveComet(event)
     CompanyLogo.alpha = CompanyLogo.alpha - 0.001
 end
     
--- MoveComet will be called over and over again
-Runtime:addEventListener("enterFrame", MoveComet)
+
 
 -- function: MoveComet
 -- Input: this function accepts an event listener
@@ -72,8 +71,7 @@ local function MoveComet2(event)
     Comet2.alpha = Comet.alpha - 0.001
 end
     
--- MoveComet will be called over and over again
-Runtime:addEventListener("enterFrame", MoveComet2)
+
 
 
 -- The function that will go to the main menu 
@@ -151,10 +149,15 @@ function scene:show( event )
         CometSoundChannel = audio.play(CometSound)
 
         -- Go to the main menu screen after the given time.
-        timer.performWithDelay ( 3000, gotoMainMenu)          
+        timer.performWithDelay ( 3000, gotoMainMenu)   
+        
+        -- MoveComet will be called over and over again
+        Runtime:addEventListener("enterFrame", MoveComet)  
+
+        -- MoveComet will be called over and over again
+        Runtime:addEventListener("enterFrame", MoveComet2)     
         
     end
-
 end --function scene:show( event )
 
 -----------------------------------------------------------------------------------------
@@ -179,9 +182,9 @@ function scene:hide( event )
     elseif ( phase == "did" ) then
         --stop the audio
        audio.stop(CometSoundChannel)
-
-    end
-
+       Runtime:removeEventListener("enterFrame", MoveComet) 
+       Runtime:removeEventListener("enterFrame", MoveComet2)
+  end
 end --function scene:hide( event )
 
 -----------------------------------------------------------------------------------------

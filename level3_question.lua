@@ -193,9 +193,9 @@ local function DisplayQuestion()
         answer = firstNumber + secondNumber
 
         -- calculate wrong answers
-        wrongAnswer1 = answer - math.random(1, 3)
-        wrongAnswer2 = answer + math.random(4, 6)
-        wrongAnswer3 = answer + math.random(7, 10)
+        wrongAnswer1 = answer - math.random(25, 26)
+        wrongAnswer2 = answer + math.random(27, 28)
+        wrongAnswer3 = answer + math.random(29, 30)
 
 
         --creating the question depending on the selcetion number

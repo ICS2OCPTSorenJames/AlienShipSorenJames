@@ -17,8 +17,7 @@ local widget = require( "widget" )
 -- load physics
 local physics = require("physics")
 
--- start physics
-physics.start()
+
 
 -----------------------------------------------------------------------------------------
 
@@ -529,10 +528,11 @@ function scene:show( event )
         -- Called when the scene is still off screen (but is about to come on screen).
     
         -- start physics
-        physics.start()
-        ReplaceCircles()
+        --physics.start()
         
-
+        
+        -- start physics
+        physics.start()
         -- set gravity
         physics.setGravity( 0, GRAVITY )
 
@@ -541,7 +541,7 @@ function scene:show( event )
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
-
+        ReplaceCircles()
         lives = 2
         questionsAnswered = 0
         portal.isVisible = true
