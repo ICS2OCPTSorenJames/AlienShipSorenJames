@@ -68,7 +68,7 @@ local function MoveComet2(event)
     Comet2.y = Comet2.y - scrollSpeed
     Comet2.x = Comet2.x - scrollSpeed
     -- make car opacity fade out
-    Comet2.alpha = Comet.alpha - 0.001
+    Comet2.alpha = Comet2.alpha - 0.001
 end
     
 
