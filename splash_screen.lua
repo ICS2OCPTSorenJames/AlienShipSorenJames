@@ -90,7 +90,7 @@ function scene:create( event )
     local sceneGroup = self.view
 
     -- create the background image
-    CompanyLogo = display.newImageRect("Images/CompanyLogo.png", 1050, 770)
+    CompanyLogo = display.newImageRect("Images/CompanyLogo.png", 1024, 768)
     
 
     Comet = display.newImage("Images/Comet.png", 925, 0)
@@ -101,8 +101,6 @@ function scene:create( event )
     Comet:scale( 0.5, 0.5)
     Comet2:scale( 0.5, 0.5)
 
-    --Comet.x = display.contentCenterX
-    --Comet.y = display.contentCenterY
     CompanyLogo.x = display.contentCenterX
     CompanyLogo.y = display.contentCenterY
 
