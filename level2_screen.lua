@@ -71,6 +71,7 @@ local livesText
 local floor
 local floor2
 local floor3
+local floor4
 local ceiling
 local rWall
 
@@ -303,6 +304,7 @@ local function AddPhysicsBodies()
     physics.addBody(floor, "static", {density=1, friction=0.3, bounce=0.2} )
     physics.addBody(floor2, "static", {density=1, friction=0.3, bounce=0.2} )
     physics.addBody(floor3, "static", {density=1, friction=0.3, bounce=0.2} )
+    physics.addBody(floor4, "static", {density=1, friction=0.3, bounce=0.2} )
     physics.addBody(ceiling, "static", {friction=0.5, bounce=0.3})
     physics.addBody(rWall, "static", {friction=0.5, bounce=0.3})
 end
@@ -477,6 +479,14 @@ function scene:create( event )
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( floor2 )
+
+    --Insert the floor
+    floor3 = display.newImageRect("Images/Level-1Floor.png", 150, 10)
+    floor3.x = display.contentWidth * 6.5 / 10
+    floor3.y = display.contentHeight *  2.7 / 10
+
+    -- Insert objects into the scene group in order to ONLY be associated with this scene
+    sceneGroup:insert( floor3 )
 
     --Insert the floor
     floor3 = display.newImageRect("Images/Level-1Floor.png", 150, 10)
