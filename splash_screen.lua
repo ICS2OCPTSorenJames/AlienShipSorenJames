@@ -44,18 +44,18 @@ local scrollSpeed = -5
 -- LOCAL FUNCTIONS
 --------------------------------------------------------------------------------------------
 
--- function: MoveComet
--- Input: this function accepts an event listener
--- Output: none
+--function: MoveComet
+    --Input: this function accepts an event listener
+    --Output: none
 -- Description: This function adds the scroll speed to the x-value of the ship
---local function MoveComet(event)
+local function MoveComet(event)
     -- add the scroll speed to the x-value of the ship
-   -- Comet.y = Comet.y - scrollSpeed
-   -- Comet.x = Comet.x + scrollSpeed
+   Comet.y = Comet.y - scrollSpeed
+   Comet.x = Comet.x + scrollSpeed
     -- make car opacity fade out
-   -- Comet.alpha = Comet.alpha - 0.001
-   -- CompanyLogo.alpha = CompanyLogo.alpha - 0.001
---end
+   Comet.alpha = Comet.alpha - 0.001
+    CompanyLogo.alpha = CompanyLogo.alpha - 0.001
+end
     
 
 
@@ -90,16 +90,16 @@ function scene:create( event )
     local sceneGroup = self.view
 
     -- create the background image
-    CompanyLogo = display.newImageRect("Images/CompanyLogoSoren.png", 1024, 768)
+    CompanyLogo = display.newImageRect("Images/CompanyLogo.png", 1024, 768)
     
 
-    --Comet = display.newImage("Images/Comet.png", 925, 0)
+    Comet = display.newImage("Images/Comet.png", 925, 0)
     Comet2 = display.newImage("Images/Comet.png", 100, 0)
 
     -- scale the comet
 
-    --Comet:scale( 0.5, 0.5)
-    --Comet2:scale( 0.5, 0.5)
+    Comet:scale( 0.5, 0.5)
+    Comet2:scale( 0.5, 0.5)
 
     CompanyLogo.x = display.contentCenterX
     CompanyLogo.y = display.contentCenterY
@@ -114,7 +114,7 @@ function scene:create( event )
 
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( CompanyLogo )
-    --sceneGroup:insert( Comet )
+    sceneGroup:insert( Comet )
     sceneGroup:insert( Comet2 )
 
 
@@ -150,7 +150,7 @@ function scene:show( event )
         timer.performWithDelay ( 3000, gotoMainMenu)   
         
         -- MoveComet will be called over and over again
-        ---Runtime:addEventListener("enterFrame", MoveComet)  
+        Runtime:addEventListener("enterFrame", MoveComet)  
 
         -- MoveComet will be called over and over again
         Runtime:addEventListener("enterFrame", MoveComet2)     
@@ -180,7 +180,7 @@ function scene:hide( event )
     elseif ( phase == "did" ) then
         --stop the audio
        audio.stop(CometSoundChannel)
-       --Runtime:removeEventListener("enterFrame", MoveComet) 
+       Runtime:removeEventListener("enterFrame", MoveComet) 
        Runtime:removeEventListener("enterFrame", MoveComet2)
   end
 end --function scene:hide( event )

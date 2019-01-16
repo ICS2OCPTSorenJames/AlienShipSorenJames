@@ -25,7 +25,6 @@ local widget = require( "widget" )
 -- load physics
 local physics = require("physics")
 
-physics.start()
 -----------------------------------------------------------------------------------------
 
 -- Naming Scene
@@ -592,7 +591,7 @@ function scene:show( event )
         print("*** lives = " .. lives)
         livesText.text = "Lives: " .. lives
         questionsAnswered = 0
-
+        
         -- make all soccer balls visible
         ReplaceCircles()
 
