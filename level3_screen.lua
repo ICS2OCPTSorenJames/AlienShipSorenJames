@@ -17,7 +17,7 @@ local widget = require( "widget" )
 -- load physics
 local physics = require("physics")
 
-physics.start()
+
 -----------------------------------------------------------------------------------------
 
 -- Naming Scene
@@ -84,7 +84,7 @@ local startPlatform
 local gameOverSound = audio.loadSound( "Sounds/booSound.mp3" )
 local gameOverSoundChannel
 
-local bkgMusic = audio.loadSound("Sounds/level3Music.mp3")
+local bkgMusic = audio.loadSound("Sounds/level1sound.wav")
 local bkgMusicChannel
 
 -----------------------------------------------------------------------------------------
@@ -413,7 +413,7 @@ function scene:create( event )
     local sceneGroup = self.view    
 
     -- Insert the background image
-    background = display.newImageRect("Images/Level3Screen.png", display.contentWidth, display.contentHeight)
+    background = display.newImageRect("Images/Level3Screen.png", 1024, 768)
     background.x = display.contentWidth / 2 
     background.y = display.contentHeight / 2   
 
