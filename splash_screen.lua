@@ -93,18 +93,15 @@ function scene:create( event )
     CompanyLogo = display.newImageRect("Images/CompanyLogo.png", 1024, 768)
     
 
-    Comet = display.newImageRect("Images/Comet.png")
-    Comet2 = display.newImageRect("Images/Comet.png")
+    Comet = display.newImageRect("Images/Comet.png", 250, 250)
+    Comet2 = display.newImageRect("Images/Comet.png", 250, 250)
+
     Comet.x = 925
     Comet.y = 0
+
     Comet2.x = 100
     Comet2.y = 0
 
-
-    -- scale the comet
-
-    Comet:scale( 0.5, 0.5)
-    Comet2:scale( 0.5, 0.5)
 
     CompanyLogo.x = display.contentCenterX
     CompanyLogo.y = display.contentCenterY
